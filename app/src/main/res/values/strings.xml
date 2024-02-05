@@ -1,3 +1,6 @@
 <resources>
   <string name="app_name">CodeTadak</string>
+  <string name="fragment_1">Home</string>
+  <string name="fragment_2">Search</string>
+  <string name="fragment_3">My Video</string>
 </resources>

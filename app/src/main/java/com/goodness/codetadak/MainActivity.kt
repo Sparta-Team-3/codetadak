@@ -26,6 +26,12 @@ class MainActivity : AppCompatActivity() {
 				2 -> getString(R.string.fragment_3)
 				else -> ""
 			}
+			when (position) {
+				0 -> tab.setIcon(R.drawable.ic_home)
+				1 -> tab.setIcon(R.drawable.ic_search)
+				2 -> tab.setIcon(R.drawable.ic_mypage)
+			}
 		}.attach()
+		vpMain.setPageTransformer(DepthPageTransformer())
 	}
 }

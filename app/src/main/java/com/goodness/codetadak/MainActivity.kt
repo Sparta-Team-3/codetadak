@@ -27,5 +27,6 @@ class MainActivity : AppCompatActivity() {
 				else -> ""
 			}
 		}.attach()
+		vpMain.setPageTransformer(DepthPageTransformer())
 	}
 }

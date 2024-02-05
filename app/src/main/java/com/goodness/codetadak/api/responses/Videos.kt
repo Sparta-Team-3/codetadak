@@ -1,4 +1,4 @@
-package com.goodness.codetadak.api
+package com.goodness.codetadak.api.responses
 
 import java.util.*
 

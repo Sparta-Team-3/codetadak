@@ -54,4 +54,8 @@ dependencies {
 	implementation("androidx.viewpager2:viewpager2:1.0.0")
 	implementation("androidx.recyclerview:recyclerview:1.3.2")
 	implementation("com.facebook.shimmer:shimmer:0.5.0")
+
+
+	// 동그라미 뷰
+	implementation ("de.hdodenhof:circleimageview:3.1.0")
 }

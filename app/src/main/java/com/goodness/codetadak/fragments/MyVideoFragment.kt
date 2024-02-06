@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.goodness.codetadak.edtitprofiledialog.EditMyProfileDialog
 import com.goodness.codetadak.edtitprofiledialog.OkClick
 import com.goodness.codetadak.databinding.FragmentMyVideoBinding
+import com.goodness.codetadak.sharedpreferences.App
 
 class MyVideoFragment : Fragment() {
 	private var _binding: FragmentMyVideoBinding? = null
@@ -39,6 +40,7 @@ class MyVideoFragment : Fragment() {
 						Glide.with(binding.root).load(profileImage).into(cvMyvideoProfile)
 						tvMyvideoName.setText(name)
 						tvMyvideoInfo.setText(info)
+						App.prefs.saveUserProfile(profileImage, name, info) // 저장이 안되고 잇음
 					}
 				}
 				editMyPageDialog.show(requireActivity().supportFragmentManager,"EditMyProfilDialog")

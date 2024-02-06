@@ -1,6 +1,5 @@
 package com.goodness.codetadak.fragments
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

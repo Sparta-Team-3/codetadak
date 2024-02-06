@@ -1,6 +1,15 @@
 <resources>
-  <string name="app_name">CodeTadak</string>
-  <string name="fragment_1">Home</string>
-  <string name="fragment_2">Search</string>
-  <string name="fragment_3">My Video</string>
+    <string name="app_name">CodeTadak</string>
+    <string name="fragment_1">Home</string>
+    <string name="fragment_2">Search</string>
+    <string name="fragment_3">My Video</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- video detail -->
+    <string name="title">Title</string>
+    <string name="channel_title">Channel title</string>
+    <string name="like">Like</string>
+    <string name="share">Share</string>
+    <string name="description">Description</string>
 </resources>

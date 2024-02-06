@@ -3,11 +3,14 @@ package com.goodness.codetadak
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.telephony.PhoneNumberFormattingTextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import com.goodness.codetadak.databinding.DialogEditMyfrofileBinding
 
@@ -27,7 +30,7 @@ class EditMyProfileDialog() : DialogFragment() {
         }
     }
 
-    private val edittexts get() = listOf(
+    private val editTexts get() = listOf(
         binding.etEditName,
         binding.etEditInfo
     )
@@ -50,6 +53,10 @@ class EditMyProfileDialog() : DialogFragment() {
                 pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }
 
+            setAddButtonEnable()
+            setTextChangeLisener()
+            setFocusChangedLisener()
+
             btnEditCheck.setOnClickListener {
                 okClick?.onClick(
                     ivEditProfile.drawable,
@@ -57,6 +64,55 @@ class EditMyProfileDialog() : DialogFragment() {
                     etEditInfo.text.toString(),)
             }
         }
+
+    }
+
+    private fun setTextChangeLisener(){ // edit text에 입력되어 있다면 버튼 활성화
+        editTexts.forEach{editText ->
+            editText.addTextChangedListener {
+                editText.addTextChangedListener()
+                setAddButtonEnable()
+            }
+        }
+    }
+
+    private fun setFocusChangedLisener() { //
+        editTexts.forEach { editText ->
+            editText.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus.not()) {
+                    editText.setErrorMessage()
+                    setAddButtonEnable()
+                }
+            }
+        }
+    }
+
+    private fun EditText.setErrorMessage(){
+        when(this) {
+            binding.etEditName -> error = getMessageValidName()
+            binding.etEditInfo -> error = getMessageValidInfo()
+        }
+    }
+
+    private fun getMessageValidName() : String? { // edit name 칸 비어있을 시
+        val name = binding.etEditName.text.toString()
+        return when {
+            name.isBlank() -> EditMyProfileErrorMessage.EMPTY_NAME
+            else -> null
+        }?.message?.let { getString(it) }
+    }
+
+    private fun getMessageValidInfo() : String? { // edit info 칸 비어있을 시
+        val info = binding.etEditInfo.text.toString()
+        return when {
+            info.isBlank() -> EditMyProfileErrorMessage.EMPTY_INFO
+            else -> null
+        }?.message?.let { getString(it) }
+    }
+
+    private fun setAddButtonEnable() { // 저장 버튼 활성화
+        binding.btnEditCheck.isEnabled =
+            getMessageValidName() == null && getMessageValidInfo() == null
     }
 
 }

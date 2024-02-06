@@ -12,4 +12,8 @@
     <string name="like">Like</string>
     <string name="share">Share</string>
     <string name="description">Description</string>
+
+    <!-- error message -->
+    <string name="empty_name_error">이름을 입력해주세요</string>
+    <string name="empty_info_error">채널 소개글을 입력해주세요</string>
 </resources>

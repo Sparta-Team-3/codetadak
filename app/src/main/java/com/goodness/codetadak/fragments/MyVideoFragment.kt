@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.goodness.codetadak.R
+import com.goodness.codetadak.databinding.FragmentMyVideoBinding
 
 class MyVideoFragment : Fragment() {
+	private var _binding : FragmentMyVideoBinding? = null
+	private val binding get() = _binding!!
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 	}
@@ -16,6 +19,12 @@ class MyVideoFragment : Fragment() {
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		return inflater.inflate(R.layout.fragment_my_video, container, false)
+		_binding = FragmentMyVideoBinding.inflate(inflater, container, false)
+		return binding.root
+	}
+
+	override fun onDestroyView() {
+		super.onDestroyView()
+		_binding = null
 	}
 }

@@ -53,6 +53,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/shape_edittext_radius10_white"
         android:inputType="text"
+        android:paddingStart="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_edit_name"
         app:layout_constraintTop_toBottomOf="@+id/tv_edit_name" />
@@ -78,6 +79,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/shape_edittext_radius10_white"
         android:inputType="text"
+        android:paddingStart="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_edit_info"
         app:layout_constraintTop_toBottomOf="@+id/tv_edit_info" />
@@ -87,13 +89,13 @@
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
+        android:backgroundTint="@color/pink"
         android:text="저장"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_edit_info"
-        android:backgroundTint="@color/pink"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_edit_info" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

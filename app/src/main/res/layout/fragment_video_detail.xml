@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_launcher_background"
+        android:src="@drawable/img_example"
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,7 @@
         android:src="@drawable/expand_more_24px"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/white" />
+        app:tint="@color/black" />
 
 
     <TextView
@@ -67,8 +67,7 @@
         android:background="@drawable/image_round"
         android:clipToOutline="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/person_24px"
-        app:tint="@color/white"
+        android:src="@drawable/img_example"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_video_title" />
 

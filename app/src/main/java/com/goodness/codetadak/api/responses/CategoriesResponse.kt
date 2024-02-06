@@ -9,12 +9,12 @@ data class CategoriesResponse(
 data class CategoryItem(
 	val kind: String,
 	val etag: String,
-	val id: String,
+	val id: Int,
 	val snippet: CategorySnippet
 )
 
 data class CategorySnippet(
 	val title: String,
 	val assignable: Boolean,
-	val channelID: String
+	val channelId: String
 )

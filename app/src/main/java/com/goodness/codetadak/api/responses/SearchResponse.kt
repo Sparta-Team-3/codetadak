@@ -18,13 +18,12 @@ data class SearchItem(
 
 data class ID(
 	val kind: String,
-	val videoID: String? = null,
-	val channelID: String? = null
+	val videoId: String
 )
 
 data class Snippet(
 	val publishedAt: String,
-	val channelID: String,
+	val channelId: String,
 	val title: String,
 	val description: String,
 	val thumbnails: SearchThumbnails,

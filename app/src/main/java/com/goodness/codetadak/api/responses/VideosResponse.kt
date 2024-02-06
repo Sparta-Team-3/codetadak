@@ -17,13 +17,13 @@ data class VideoItem(
 
 data class VideoSnippet(
 	val publishedAt: String,
-	val channelID: String,
+	val channelId: String,
 	val title: String,
 	val description: String,
 	val thumbnails: Thumbnails,
 	val channelTitle: String,
 	val tags: List<String>? = null,
-	val categoryID: String,
+	val categoryId: String,
 	val liveBroadcastContent: String,
 	val defaultLanguage: String? = null,
 	val localized: Localized,

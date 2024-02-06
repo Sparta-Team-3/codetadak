@@ -1,13 +1,13 @@
 package com.goodness.codetadak.fragments
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.goodness.codetadak.R
+import com.goodness.codetadak.sharedpreferences.UserInfo
 import com.goodness.codetadak.edtitprofiledialog.EditMyProfileDialog
 import com.goodness.codetadak.edtitprofiledialog.OkClick
 import com.goodness.codetadak.databinding.FragmentMyVideoBinding
@@ -35,17 +35,30 @@ class MyVideoFragment : Fragment() {
 			ivMyvideoProfilechange.setOnClickListener {
 				val editMyPageDialog = EditMyProfileDialog()
 				editMyPageDialog.okClick = object : OkClick {
-					override fun onClick(profileImage: Drawable, name: String, info: String) {
-						Log.d("TAG", "onClick: $profileImage")
-						Glide.with(binding.root).load(profileImage).into(cvMyvideoProfile)
-						tvMyvideoName.setText(name)
-						tvMyvideoInfo.setText(info)
-						App.prefs.saveUserProfile(profileImage, name, info) // 저장이 안되고 잇음
+					override fun onClick(userInfo: UserInfo) {
+						if(userInfo.profileImage == null) {
+							ivMyvideoProfile.setImageResource(R.drawable.ic_default_profile)
+						}else {
+							Glide.with(binding.root).load(userInfo.profileImage).into(ivMyvideoProfile)
+						}
+						tvMyvideoName.setText(userInfo.name)
+						tvMyvideoInfo.setText(userInfo.info)
+						App.prefs.saveUserProfile(userInfo) // 프로필 저장
 					}
 				}
 				editMyPageDialog.show(requireActivity().supportFragmentManager,"EditMyProfilDialog")
 			}
 		}
+	}
+
+	override fun onResume() {
+		super.onResume()
+//		val userInfo = App.prefs.loadUserProfile() // 프로필 불러오기
+//		with(binding) {
+//			ivMyvideoProfile.setImageURI(userInfo.profileImage)
+//			tvMyvideoName.setText(userInfo.name)
+//			tvMyvideoInfo.setText(userInfo.info)
+//		}
 	}
 
 	override fun onDestroyView() {

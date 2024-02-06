@@ -1,6 +1,6 @@
 package com.goodness.codetadak.edtitprofiledialog
 
-import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,21 +10,25 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import com.goodness.codetadak.sharedpreferences.UserInfo
 import com.goodness.codetadak.databinding.DialogEditMyfrofileBinding
 
 interface OkClick {
-    fun onClick(profileImage: Drawable, name: String, info: String)
+    fun onClick(userInfo: UserInfo)
 }
 
 class EditMyProfileDialog() : DialogFragment() {
     var okClick: OkClick? = null
     private var _binding : DialogEditMyfrofileBinding? = null
     private val binding get() = _binding!!
+    private var profileUri : Uri? = null
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             binding.ivEditProfile.setImageURI(uri)
+            profileUri = uri
         }
     }
+
 
     private val editTexts get() = listOf(
         binding.etEditName,
@@ -54,10 +58,8 @@ class EditMyProfileDialog() : DialogFragment() {
             setFocusChangedLisener()
 
             btnEditCheck.setOnClickListener {
-                okClick?.onClick(
-                    ivEditProfile.drawable,
-                    etEditName.text.toString(),
-                    etEditInfo.text.toString(),)
+                val userInfo = UserInfo(profileUri, etEditName.text.toString(),etEditInfo.text.toString())
+                okClick?.onClick(userInfo)
                 dismiss()
             }
         }

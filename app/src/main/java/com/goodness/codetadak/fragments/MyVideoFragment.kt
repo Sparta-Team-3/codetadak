@@ -2,12 +2,14 @@ package com.goodness.codetadak.fragments
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.goodness.codetadak.EditMyProfileDialog
-import com.goodness.codetadak.OkClick
+import com.bumptech.glide.Glide
+import com.goodness.codetadak.edtitprofiledialog.EditMyProfileDialog
+import com.goodness.codetadak.edtitprofiledialog.OkClick
 import com.goodness.codetadak.databinding.FragmentMyVideoBinding
 
 class MyVideoFragment : Fragment() {
@@ -33,7 +35,10 @@ class MyVideoFragment : Fragment() {
 				val editMyPageDialog = EditMyProfileDialog()
 				editMyPageDialog.okClick = object : OkClick {
 					override fun onClick(profileImage: Drawable, name: String, info: String) {
-						TODO("Not yet implemented")
+						Log.d("TAG", "onClick: $profileImage")
+						Glide.with(binding.root).load(profileImage).into(cvMyvideoProfile)
+						tvMyvideoName.setText(name)
+						tvMyvideoInfo.setText(info)
 					}
 				}
 				editMyPageDialog.show(requireActivity().supportFragmentManager,"EditMyProfilDialog")

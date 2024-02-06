@@ -1,9 +1,7 @@
-package com.goodness.codetadak
+package com.goodness.codetadak.edtitprofiledialog
 
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
-import android.telephony.PhoneNumberFormattingTextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,11 +20,9 @@ class EditMyProfileDialog() : DialogFragment() {
     var okClick: OkClick? = null
     private var _binding : DialogEditMyfrofileBinding? = null
     private val binding get() = _binding!!
-    private var selectedProfile: Uri? = null
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             binding.ivEditProfile.setImageURI(uri)
-            selectedProfile = uri
         }
     }
 
@@ -62,6 +58,7 @@ class EditMyProfileDialog() : DialogFragment() {
                     ivEditProfile.drawable,
                     etEditName.text.toString(),
                     etEditInfo.text.toString(),)
+                dismiss()
             }
         }
 
@@ -87,7 +84,7 @@ class EditMyProfileDialog() : DialogFragment() {
         }
     }
 
-    private fun EditText.setErrorMessage(){
+    private fun EditText.setErrorMessage(){ // 에러메세지 뿌리기
         when(this) {
             binding.etEditName -> error = getMessageValidName()
             binding.etEditInfo -> error = getMessageValidInfo()
@@ -112,7 +109,7 @@ class EditMyProfileDialog() : DialogFragment() {
 
     private fun setAddButtonEnable() { // 저장 버튼 활성화
         binding.btnEditCheck.isEnabled =
-            getMessageValidName() == null && getMessageValidInfo() == null
+            getMessageValidName() == null && getMessageValidInfo() == null // 둘다 null 값인 경우 true 반환  isEnabled  = true
     }
 
 }

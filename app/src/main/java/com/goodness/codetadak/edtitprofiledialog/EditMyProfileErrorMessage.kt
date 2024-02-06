@@ -1,6 +1,7 @@
-package com.goodness.codetadak
+package com.goodness.codetadak.edtitprofiledialog
 
 import androidx.annotation.StringRes
+import com.goodness.codetadak.R
 
 enum class EditMyProfileErrorMessage(@StringRes val message: Int) {
     EMPTY_NAME(R.string.empty_name_error),

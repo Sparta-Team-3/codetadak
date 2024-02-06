@@ -64,9 +64,6 @@ data class RegionRestriction(
 )
 
 data class ContentRating(
-	// 여러 국가의 등급에 대한 정보들이 들어갈 수 있습니다.
-	// 필요에 따라 필드를 추가하거나 조정할 수 있습니다.
-	// 예시로 "usRating"을 추가합니다.
 	val usRating: String
 )
 

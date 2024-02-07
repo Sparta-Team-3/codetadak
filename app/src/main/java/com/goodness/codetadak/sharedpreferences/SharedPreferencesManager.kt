@@ -6,6 +6,7 @@ import com.goodness.codetadak.api.responses.VideosResponse
 import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
+import androidx.core.net.toUri
 
 class SharedPreferencesManager(context: Context) {
     private val prefs = context.getSharedPreferences(Constants.PREFS_FILENAME,Context.MODE_PRIVATE)
@@ -30,4 +31,17 @@ class SharedPreferencesManager(context: Context) {
         return result
     }
 
+    fun saveUserProfile (userInfo: UserInfo) { // null 체크
+        prefs.edit().putString(Constants.KEY_PROFILE_IMAGE, userInfo.profileImage.toString()).apply()
+        prefs.edit().putString(Constants.KEY_PROFILE_NAME, userInfo.name).apply()
+        prefs.edit().putString(Constants.KEY_PROFILE_INFO, userInfo.info).apply()
+    }
+
+    fun loadUserProfile(): UserInfo {
+        return UserInfo(
+            prefs.getString(Constants.KEY_PROFILE_IMAGE, Constants.DEFAULT_STRING)?.toUri()!!,
+            prefs.getString(Constants.KEY_PROFILE_NAME, Constants.DEFAULT_STRING)!!,
+            prefs.getString(Constants.KEY_PROFILE_INFO, Constants.DEFAULT_STRING)!!
+        )
+    }
 }

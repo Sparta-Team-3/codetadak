@@ -1,5 +1,6 @@
 package com.goodness.codetadak.adapters
 
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.goodness.codetadak.api.responses.SearchItem
 import com.goodness.codetadak.databinding.SearchItemVideoBinding
+import com.goodness.codetadak.viewmodels.YoutubeViewModel
 
-class SearchListListAdapter :
+class SearchListListAdapter(private val youtubeViewModel: YoutubeViewModel) :
 	ListAdapter<SearchItem, SearchListListAdapter.SearchListHolder>(SearchItemDiffCallback()) {
 	interface OnItemClickListener {
 		fun onItemClick(position: Int)
@@ -22,10 +24,15 @@ class SearchListListAdapter :
 	}
 	inner class SearchListHolder(private val binding: SearchItemVideoBinding) : RecyclerView.ViewHolder(binding.root) {
 		fun bind(searchItem: SearchItem) = with(binding) {
-			tvItemTitle.text = searchItem.snippet.title
+			tvItemTitle.text = Html.fromHtml(searchItem.snippet.title, Html.FROM_HTML_MODE_LEGACY)
+
 			Glide.with(root)
 				.load(searchItem.snippet.thumbnails.high.url)
 				.into(ivImage)
+
+			root.setOnClickListener {
+				youtubeViewModel.setCurrentVideoById(searchItem.id.videoId)
+			}
 		}
 	}
 

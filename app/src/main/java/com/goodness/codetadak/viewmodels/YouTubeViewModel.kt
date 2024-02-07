@@ -80,10 +80,10 @@ class YoutubeViewModel : ViewModel() {
 		}
 	}
 
-	fun getVideoById(id: String) {
+	fun setCurrentVideoById(id: String) {
 		_currentVideo.value = _currentVideo.value?.copy(
 			dataList = emptyList(),
-			isLoading = false,
+			isLoading = true,
 			isError = false,
 		)
 

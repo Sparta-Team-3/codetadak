@@ -14,5 +14,4 @@
   <!-- error message -->
   <string name="empty_name_error">이름을 입력해주세요</string>
   <string name="empty_info_error">채널 소개글을 입력해주세요</string>
-  >>>>>>> dev
 </resources>

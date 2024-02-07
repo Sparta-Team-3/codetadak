@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.goodness.codetadak.MainActivity
 import com.goodness.codetadak.R
 import com.goodness.codetadak.api.YouTubeInstance
 import com.goodness.codetadak.databinding.FragmentSearchBinding
@@ -32,5 +33,8 @@ class SearchFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		binding.button2.setOnClickListener {
+			(requireActivity() as MainActivity).replace()
+		}
 	}
 }

@@ -13,7 +13,7 @@ data class SearchItem(
 	val kind: String,
 	val etag: String,
 	val id: ID,
-	val snippet: Snippet
+	val snippet: SearchSnippet
 )
 
 data class ID(
@@ -21,7 +21,7 @@ data class ID(
 	val videoId: String
 )
 
-data class Snippet(
+data class SearchSnippet(
 	val publishedAt: String,
 	val channelId: String,
 	val title: String,

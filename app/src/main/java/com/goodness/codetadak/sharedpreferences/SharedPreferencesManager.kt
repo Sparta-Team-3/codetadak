@@ -39,9 +39,9 @@ class SharedPreferencesManager(context: Context) {
 
     fun loadUserProfile(): UserInfo {
         return UserInfo(
-            prefs.getString(Constants.KEY_PROFILE_IMAGE, Constants.DEFAULT_STRING)?.toUri()!!,
-            prefs.getString(Constants.KEY_PROFILE_NAME, Constants.DEFAULT_STRING)!!,
-            prefs.getString(Constants.KEY_PROFILE_INFO, Constants.DEFAULT_STRING)!!
+            prefs.getString(Constants.KEY_PROFILE_IMAGE, Constants.DEFAULT_STRING)?.toUri(),
+            prefs.getString(Constants.KEY_PROFILE_NAME, Constants.DEFAULT_STRING) ?: "",
+            prefs.getString(Constants.KEY_PROFILE_INFO, Constants.DEFAULT_STRING)?: ""
         )
     }
 }

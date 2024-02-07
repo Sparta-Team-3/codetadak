@@ -11,6 +11,15 @@ import com.goodness.codetadak.databinding.SearchItemVideoBinding
 
 class SearchListListAdapter :
 	ListAdapter<SearchItem, SearchListListAdapter.SearchListHolder>(SearchItemDiffCallback()) {
+	interface OnItemClickListener {
+		fun onItemClick(position: Int)
+	}
+
+	private var listener: OnItemClickListener? = null
+
+	fun setOnItemClickListener(listener: OnItemClickListener) {
+		this.listener = listener
+	}
 	inner class SearchListHolder(private val binding: SearchItemVideoBinding) : RecyclerView.ViewHolder(binding.root) {
 		fun bind(searchItem: SearchItem) = with(binding) {
 			tvItemTitle.text = searchItem.snippet.title
@@ -28,6 +37,9 @@ class SearchListListAdapter :
 	override fun onBindViewHolder(holder: SearchListHolder, position: Int) {
 		val searchItem = getItem(position)
 		holder.bind(searchItem)
+		holder.itemView.setOnClickListener {
+			this.listener?.onItemClick(position)
+		}
 	}
 }
 

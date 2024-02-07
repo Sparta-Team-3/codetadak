@@ -2,19 +2,26 @@ package com.goodness.codetadak
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProvider
 import com.goodness.codetadak.adapters.MainViewPagerAdapter
+import com.goodness.codetadak.api.responses.VideoItem
 import com.goodness.codetadak.databinding.ActivityMainBinding
 import com.goodness.codetadak.fragments.VideoDetailFragment
+import com.goodness.codetadak.viewmodels.DataState
+import com.goodness.codetadak.viewmodels.YoutubeViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
+    lateinit var youtubeViewModel : YoutubeViewModel
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val detailFragment = VideoDetailFragment()
+    private val bundle = Bundle()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        youtubeViewModel = ViewModelProvider(this).get(YoutubeViewModel::class.java)
         initSwiper()
     }
 

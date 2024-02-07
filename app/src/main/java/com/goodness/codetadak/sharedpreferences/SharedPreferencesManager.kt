@@ -1,6 +1,7 @@
 package com.goodness.codetadak.sharedpreferences
 
 import android.content.Context
+import android.net.Uri
 import com.goodness.codetadak.Constants
 import com.goodness.codetadak.api.responses.VideosResponse
 import com.google.gson.Gson
@@ -39,7 +40,7 @@ class SharedPreferencesManager(context: Context) {
 
     fun loadUserProfile(): UserInfo {
         return UserInfo(
-            prefs.getString(Constants.KEY_PROFILE_IMAGE, Constants.DEFAULT_STRING)?.toUri(),
+            prefs.getString(Constants.KEY_PROFILE_IMAGE, Constants.DEFAULT_STRING)?.toUri() ?: Uri.EMPTY,
             prefs.getString(Constants.KEY_PROFILE_NAME, Constants.DEFAULT_STRING) ?: "",
             prefs.getString(Constants.KEY_PROFILE_INFO, Constants.DEFAULT_STRING)?: ""
         )

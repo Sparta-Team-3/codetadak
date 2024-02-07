@@ -1,6 +1,7 @@
 package com.goodness.codetadak.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +56,7 @@ class MyVideoFragment : Fragment() {
 		super.onResume()
 		val userInfo = App.prefs.loadUserProfile() // 프로필 불러오기
 		with(binding) {
-			if(userInfo.profileImage == null) {
+			if(userInfo.profileImage == null || userInfo.profileImage.toString() == "null") {
 				ivMyvideoProfile.setImageResource(R.drawable.ic_default_profile)
 			}else {
 				Glide.with(binding.root).load(userInfo.profileImage).into(ivMyvideoProfile)

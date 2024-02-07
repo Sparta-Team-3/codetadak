@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 class SearchFragment : Fragment() {
 	private lateinit var binding: FragmentSearchBinding
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
-	private val adapter by lazy { SearchListListAdapter() }
+	private val adapter by lazy { SearchListListAdapter(youtubeViewModel) }
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)

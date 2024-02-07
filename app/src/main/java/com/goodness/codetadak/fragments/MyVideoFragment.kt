@@ -36,7 +36,26 @@ class MyVideoFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 
 		initList()
+		initProfileEdit()
 
+	}
+
+	private fun initList() { // RecyclerView 띄우기
+		with(binding) {
+			rvMyvideo.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL,false)
+			rvMyvideo.setHasFixedSize(true)
+			rvMyvideo.adapter = myFavoriteVideoAdapter.apply {
+				myVideoItemClick = object : MyFavoriteVideoAdapter.MyVideoItemClick{
+					override fun onClick(view: View, position: Int) {
+						// 아이템 목록 클릭시 DetailFragment 호출 및 데이터 전달?
+					}
+				}
+			}
+//			myFavoriteVideoAdapter.setData() // 저장된 값 불러서 리스트 넣기
+		}
+	}
+
+	private fun initProfileEdit() { // 프로필 수정 기능
 		with(binding) {
 			ivMyvideoProfilechange.setOnClickListener {
 				val editMyPageDialog = EditMyProfileDialog()
@@ -54,21 +73,6 @@ class MyVideoFragment : Fragment() {
 				}
 				editMyPageDialog.show(requireActivity().supportFragmentManager,"EditMyProfilDialog")
 			}
-		}
-	}
-
-	private fun initList() {
-		with(binding) {
-			rvMyvideo.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL,false)
-			rvMyvideo.setHasFixedSize(true)
-			rvMyvideo.adapter = myFavoriteVideoAdapter.apply {
-				myVideoItemClick = object : MyFavoriteVideoAdapter.MyVideoItemClick{
-					override fun onClick(view: View, position: Int) {
-						// 아이템 목록 클릭시 DetailFragment 호출 및 데이터 전달?
-					}
-				}
-			}
-//			myFavoriteVideoAdapter.setData() // 저장된 값 불러서 리스트 넣기
 		}
 	}
 

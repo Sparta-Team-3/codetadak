@@ -53,12 +53,16 @@ class MyVideoFragment : Fragment() {
 
 	override fun onResume() {
 		super.onResume()
-//		val userInfo = App.prefs.loadUserProfile() // 프로필 불러오기
-//		with(binding) {
-//			ivMyvideoProfile.setImageURI(userInfo.profileImage)
-//			tvMyvideoName.setText(userInfo.name)
-//			tvMyvideoInfo.setText(userInfo.info)
-//		}
+		val userInfo = App.prefs.loadUserProfile() // 프로필 불러오기
+		with(binding) {
+			if(userInfo.profileImage == null) {
+				ivMyvideoProfile.setImageResource(R.drawable.ic_default_profile)
+			}else {
+				Glide.with(binding.root).load(userInfo.profileImage).into(ivMyvideoProfile)
+			}
+			tvMyvideoName.setText(userInfo.name)
+			tvMyvideoInfo.setText(userInfo.info)
+		}
 	}
 
 	override fun onDestroyView() {

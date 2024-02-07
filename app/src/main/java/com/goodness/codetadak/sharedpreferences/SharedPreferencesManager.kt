@@ -37,12 +37,11 @@ class SharedPreferencesManager(context: Context) {
         prefs.edit().putString(Constants.KEY_PROFILE_INFO, userInfo.info).apply()
     }
 
-//    fun loadUserProfile() : UserInfo {
-//        if (prefs.contains(Constants.KEY_PROFILE_IMAGE)) {
-//            var profile = prefs.getString(Constants.KEY_PROFILE_IMAGE, Constants.DEFAULT_STRING)?.toUri()
-//            val name = prefs.getString(Constants.KEY_PROFILE_NAME, Constants.DEFAULT_STRING)
-//            val info = prefs.getString(Constants.KEY_PROFILE_INFO, Constants.DEFAULT_STRING)
-//        }
-//        return
-//    }
+    fun loadUserProfile(): UserInfo {
+        return UserInfo(
+            prefs.getString(Constants.KEY_PROFILE_IMAGE, Constants.DEFAULT_STRING)?.toUri()!!,
+            prefs.getString(Constants.KEY_PROFILE_NAME, Constants.DEFAULT_STRING)!!,
+            prefs.getString(Constants.KEY_PROFILE_INFO, Constants.DEFAULT_STRING)!!
+        )
+    }
 }

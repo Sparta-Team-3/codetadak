@@ -29,7 +29,6 @@ class EditMyProfileDialog() : DialogFragment() {
         }
     }
 
-
     private val editTexts get() = listOf(
         binding.etEditName,
         binding.etEditInfo

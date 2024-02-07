@@ -3,8 +3,6 @@
   <string name="fragment_1">Home</string>
   <string name="fragment_2">Search</string>
   <string name="fragment_3">My Video</string>
-  <!-- TODO: Remove or change this placeholder text -->
-  <string name="hello_blank_fragment">Hello blank fragment</string>
 
   <!-- video detail -->
   <string name="title">Title</string>
@@ -13,4 +11,8 @@
   <string name="share">Share</string>
   <string name="description">Description</string>
   <string name="search_et_hint">검색어를 입력해주세요</string>
+  <!-- error message -->
+  <string name="empty_name_error">이름을 입력해주세요</string>
+  <string name="empty_info_error">채널 소개글을 입력해주세요</string>
+  >>>>>>> dev
 </resources>

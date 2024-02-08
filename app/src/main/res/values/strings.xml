@@ -14,4 +14,11 @@
   <!-- error message -->
   <string name="empty_name_error">이름을 입력해주세요</string>
   <string name="empty_info_error">채널 소개글을 입력해주세요</string>
+
+  <!-- My video page -->
+  <string name="profile_name">이름을 설정해주세요</string>
+  <string name="channel_info">채널 설명을 작성해주세요!</string>
+  <string name="myvideo_list">나의 비디오 리스트 목록</string>
+  <string name="video_title">영상 제목</string>
+  <string name="video_dec">설명문구</string>
 </resources>

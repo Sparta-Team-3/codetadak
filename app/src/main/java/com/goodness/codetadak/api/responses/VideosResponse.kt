@@ -27,7 +27,8 @@ data class VideoSnippet(
 	val liveBroadcastContent: String,
 	val defaultLanguage: String? = null,
 	val localized: Localized,
-	val defaultAudioLanguage: String? = null
+	val defaultAudioLanguage: String? = null,
+	var isFavorite: Boolean = false
 )
 
 data class Localized(

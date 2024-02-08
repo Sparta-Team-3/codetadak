@@ -11,7 +11,9 @@
   <string name="share">Share</string>
   <string name="description">Description</string>
   <string name="search_et_hint">검색어를 입력해주세요</string>
+
   <!-- error message -->
   <string name="empty_name_error">이름을 입력해주세요</string>
   <string name="empty_info_error">채널 소개글을 입력해주세요</string>
+  <string name="quota_exceeded">API 할당량 초과하였습니다.</string>
 </resources>

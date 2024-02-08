@@ -25,7 +25,7 @@ class YoutubeViewModel : ViewModel() {
 
 	private var _mostPopularVideoState: MutableLiveData<DataState<VideoItem>> = MutableLiveData(DataState())
 	private var _categoryState: MutableLiveData<DataState<CategoryItem>> = MutableLiveData(DataState())
-	private var _mostPopularVideosByCategoryState: MutableLiveData<DataState<VideoItem>> = MutableLiveData(DataState())
+	private var _mostPopularVideosByCategoryIdState: MutableLiveData<DataState<VideoItem>> = MutableLiveData(DataState())
 	private var _searchVideoState: MutableLiveData<DataState<SearchItem>> = MutableLiveData(DataState())
 	private var _channelsByCategoryId: MutableLiveData<DataState<ChannelItem>> = MutableLiveData(DataState())
 
@@ -35,8 +35,8 @@ class YoutubeViewModel : ViewModel() {
 		get() = _mostPopularVideoState
 	val categoryState: LiveData<DataState<CategoryItem>>
 		get() = _categoryState
-	val mostPopularVideosByCategoryState: LiveData<DataState<VideoItem>>
-		get() = _mostPopularVideosByCategoryState
+	val mostPopularVideosByCategorySIdtate: LiveData<DataState<VideoItem>>
+		get() = _mostPopularVideosByCategoryIdState
 	val searchVideoState: LiveData<DataState<SearchItem>>
 		get() = _searchVideoState
 	val channelsByCategoryId: LiveData<DataState<ChannelItem>>
@@ -47,8 +47,7 @@ class YoutubeViewModel : ViewModel() {
 
 	fun getMostPopularVideos(
 		maxResults: Int = 5,
-		regionCode: String = "KR",
-		videoCategoryId: Int = 0
+		regionCode: String = "KR"
 	) {
 		_mostPopularVideoState.value = _mostPopularVideoState.value?.copy(
 			dataList = emptyList(),
@@ -60,8 +59,7 @@ class YoutubeViewModel : ViewModel() {
 		CoroutineScope(Dispatchers.IO).launch {
 			val response = service.getVideos(
 				maxResults = maxResults,
-				regionCode = regionCode,
-				videoCategoryId = videoCategoryId
+				regionCode = regionCode
 			)
 
 			withContext(Dispatchers.Main) {
@@ -74,6 +72,45 @@ class YoutubeViewModel : ViewModel() {
 					)
 				} else {
 					_mostPopularVideoState.value = _mostPopularVideoState.value?.copy(
+						dataList = emptyList(),
+						isLoading = false,
+						isError = true,
+						errorCode = response.code()
+					)
+				}
+			}
+		}
+	}
+
+	fun getMostPopularVideosByCategoryId(
+		categoryId: Int,
+		maxResults: Int = 5,
+		regionCode: String = "KR"
+	) {
+		_mostPopularVideosByCategoryIdState.value = _mostPopularVideosByCategoryIdState.value?.copy(
+			dataList = emptyList(),
+			isLoading = true,
+			isError = false,
+			errorCode = null
+		)
+
+		CoroutineScope(Dispatchers.IO).launch {
+			val response = service.getVideos(
+				videoCategoryId = categoryId,
+				maxResults = maxResults,
+				regionCode = regionCode
+			)
+
+			withContext(Dispatchers.Main) {
+				if (response.isSuccessful) {
+					_mostPopularVideosByCategoryIdState.value = _mostPopularVideosByCategoryIdState.value?.copy(
+						dataList = response.body()?.items ?: emptyList(),
+						isLoading = false,
+						isError = false,
+						errorCode = null
+					)
+				} else {
+					_mostPopularVideosByCategoryIdState.value = _mostPopularVideosByCategoryIdState.value?.copy(
 						dataList = emptyList(),
 						isLoading = false,
 						isError = true,
@@ -117,7 +154,7 @@ class YoutubeViewModel : ViewModel() {
 		}
 	}
 
-	fun getCategories(regionCode: String, hl: String) {
+	fun getCategories(regionCode: String = "KR", hl: String = "ko_KR") {
 		_categoryState.value = _categoryState.value?.copy(
 			dataList = emptyList(),
 			isLoading = true,

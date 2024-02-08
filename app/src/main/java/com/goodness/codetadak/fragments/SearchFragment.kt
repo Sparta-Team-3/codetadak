@@ -11,20 +11,38 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+<<<<<<< HEAD
 import com.goodness.codetadak.MainActivity
+=======
+import com.goodness.codetadak.R
+import com.goodness.codetadak.adapters.LanguageListAdapter
+>>>>>>> dev
 import com.goodness.codetadak.adapters.SearchListListAdapter
 import com.goodness.codetadak.databinding.FragmentSearchBinding
+import com.goodness.codetadak.viewmodels.LanguageViewModel
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
+<<<<<<< HEAD
 import kotlinx.coroutines.launch
+=======
+>>>>>>> dev
 
 class SearchFragment : Fragment() {
 	private lateinit var binding: FragmentSearchBinding
-	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
-	private val adapter by lazy { SearchListListAdapter(youtubeViewModel) }
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
+	private val languageViewModel by lazy { ViewModelProvider(requireActivity())[LanguageViewModel::class.java] }
+	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
+
+	private val languageListAdapter by lazy {
+		LanguageListAdapter(requireActivity()) {
+			languageViewModel.updateCurLanguage(it)
+			binding.etSearch.setText(it.value)
+			youtubeViewModel.getSearchByKeyword(
+				q = it.value,
+				maxResults = 12
+			)
+		}
 	}
+	private val searchListAdapter by lazy { SearchListListAdapter(youtubeViewModel) }
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -50,7 +68,10 @@ class SearchFragment : Fragment() {
 
 	private fun initList() = with(binding) {
 		rvSearchList.layoutManager = LinearLayoutManager(requireActivity())
-		rvSearchList.adapter = adapter
+		rvSearchList.adapter = searchListAdapter
+
+		rvLanguageSelect.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+		rvLanguageSelect.adapter = languageListAdapter
 	}
 
 	private fun initHandler() = with(binding) {
@@ -74,14 +95,21 @@ class SearchFragment : Fragment() {
 		youtubeViewModel.searchVideoState.observe(viewLifecycleOwner) { dataState ->
 			with(binding.tvError) {
 				visibility = if (dataState.isError) View.VISIBLE else View.GONE
-				text = "요청 실패"
+				text = when (dataState.errorCode) {
+					403 -> getString(R.string.quota_exceeded)
+					else -> ""
+				}
 			}
 
 			with(binding.sflShimmerContainer) {
 				visibility = if (dataState.isLoading) View.VISIBLE else View.GONE
 			}
 
-			adapter.submitList(dataState.dataList)
+			searchListAdapter.submitList(dataState.dataList)
+		}
+
+		languageViewModel.languageList.observe(viewLifecycleOwner) {
+			languageListAdapter.submitList(it)
 		}
 	}
 

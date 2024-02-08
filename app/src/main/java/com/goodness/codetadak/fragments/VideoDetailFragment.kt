@@ -1,19 +1,16 @@
 package com.goodness.codetadak.fragments
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LiveData
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.goodness.codetadak.R
-import com.goodness.codetadak.api.responses.VideoItem
 import com.goodness.codetadak.databinding.FragmentVideoDetailBinding
 import com.goodness.codetadak.sharedpreferences.App
-import com.goodness.codetadak.viewmodels.DataState
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
 
 class VideoDetailFragment : Fragment() {
@@ -57,7 +54,17 @@ class VideoDetailFragment : Fragment() {
             }
         }
         binding.root.setOnTouchListener { _, event -> true }
+
+        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // 뒤로 가기 시 실행되는 코드
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.to_top, R.anim.from_bottom).remove(this@VideoDetailFragment).commit()
+                requireActivity().supportFragmentManager.popBackStack()
+            }
+        })
     }
+
 
     override fun onResume() {
         super.onResume()

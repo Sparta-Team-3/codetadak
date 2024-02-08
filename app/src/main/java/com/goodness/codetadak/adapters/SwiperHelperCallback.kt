@@ -1,7 +1,6 @@
 package com.goodness.codetadak.adapters
 
-import android.content.res.Resources
-import android.content.res.loader.ResourcesLoader
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -10,19 +9,17 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.RectF
-import android.graphics.drawable.Drawable
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.load.engine.Resource
+import com.goodness.codetadak.MainActivity
 import com.goodness.codetadak.R
+import com.goodness.codetadak.fragments.MyVideoFragment
 import com.google.android.material.snackbar.Snackbar
 
 // 롱터치 후 드래그, 스와이프 동작 제어
-class SwipeHelperCallback(private val rviewAdapter: MyFavoriteVideoAdapter) :
+class SwipeHelperCallback(private val rviewAdapter: MyFavoriteVideoAdapter , private val context: Context) :
     ItemTouchHelper.Callback() {
-
-    private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
-
     // 이동 방향 결정하기
     override fun getMovementFlags(
         recyclerView: RecyclerView,
@@ -33,7 +30,6 @@ class SwipeHelperCallback(private val rviewAdapter: MyFavoriteVideoAdapter) :
         // 설정 안 하고 싶으면 0
         return makeMovementFlags(0, ItemTouchHelper.LEFT) // 왼쪽으로 스와이프
     }
-
 
     // 드래그 일어날 때 동작 (롱터치 후 드래그)
     override fun onMove(
@@ -56,7 +52,6 @@ class SwipeHelperCallback(private val rviewAdapter: MyFavoriteVideoAdapter) :
 
     }
 
-
     override fun onChildDraw(
         c: Canvas,
         recyclerView: RecyclerView,
@@ -66,7 +61,6 @@ class SwipeHelperCallback(private val rviewAdapter: MyFavoriteVideoAdapter) :
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        val icon: Bitmap
         // actionState가 SWIPE 동작일 때 배경을 빨간색으로 칠하는 작업을 수행하도록 함
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             val itemView = viewHolder.itemView
@@ -83,15 +77,15 @@ class SwipeHelperCallback(private val rviewAdapter: MyFavoriteVideoAdapter) :
                     itemView.bottom.toFloat())
                 c.drawRect(background, paint)
 
-                // 휴지통 아이콘과 표시될 위치를 지정하고 비트맵을 그려줌
-                // 비트맵 이미지는 Image Asset 기능으로 추가하고 drawable 폴더에 위치하도록 함
-//                icon = BitmapFactory.decodeResource(, R.drawable.ic_myvideo_trash)
-//                val iconDst = RectF(
-//                    itemView.right.toFloat() - 3 - width,
-//                    itemView.top.toFloat() + width,
-//                    itemView.right.toFloat() - width,
-//                    itemView.bottom.toFloat() - width)
-//                c.drawBitmap(icon, null, iconDst, null)
+
+//                // 휴지통 아이콘과 표시될 위치를 지정하고 비트맵을 그려줌
+                val icon: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_myvideo_trash)
+                val iconDst = RectF(
+                    itemView.right.toFloat() - 3 - width,
+                    itemView.top.toFloat() + width,
+                    itemView.right.toFloat() - width,
+                    itemView.bottom.toFloat() - width)
+                c.drawBitmap(icon, null, iconDst, null)
             }
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             return

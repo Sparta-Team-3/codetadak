@@ -43,10 +43,7 @@ class SearchFragment : Fragment() {
 		adapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
 			override fun onItemClick(position: Int) {
 				Log.d("asd","asd: $position")
-				val videoData = youtubeViewModel.currentVideo.value
-				if (videoData != null && position >= 0 && position < videoData.dataList.size) {
-					(requireActivity() as MainActivity).replace()
-				}
+				(requireActivity() as MainActivity).replace()
 			}
 		})
 	}

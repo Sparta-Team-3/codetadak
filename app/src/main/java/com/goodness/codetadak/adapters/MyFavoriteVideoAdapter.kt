@@ -37,7 +37,7 @@ class MyFavoriteVideoAdapter(private val youtubeViewModel: YoutubeViewModel) : R
             with(binding) {
                 Glide.with(root).load(item.snippet.thumbnails.high.url).into(ivMyfavoriteThumbnail)
                 tvMyfavoriteTitle.text = Html.fromHtml(item.snippet.title, Html.FROM_HTML_MODE_LEGACY)
-                tvMyfavoriteInfo.setText(item.snippet.description)
+                tvMyfavoriteName.setText(item.snippet.channelTitle)
 
             }
         }

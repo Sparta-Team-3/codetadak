@@ -39,7 +39,7 @@ class SearchListListAdapter(private val youtubeViewModel: YoutubeViewModel) :
 }
 
 class SearchItemDiffCallback : DiffUtil.ItemCallback<SearchItem>() {
-	override fun areItemsTheSame(oldItem: SearchItem, newItem: SearchItem) = oldItem === newItem
+	override fun areItemsTheSame(oldItem: SearchItem, newItem: SearchItem) = oldItem.id.videoId == newItem.id.videoId
 
 	override fun areContentsTheSame(oldItem: SearchItem, newItem: SearchItem): Boolean {
 		return oldItem == newItem

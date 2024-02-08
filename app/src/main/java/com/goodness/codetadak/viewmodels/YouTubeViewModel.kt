@@ -16,7 +16,8 @@ import kotlinx.coroutines.withContext
 data class DataState<T>(
 	val dataList: List<T> = emptyList(),
 	val isLoading: Boolean = false,
-	val isError: Boolean = false
+	val isError: Boolean = false,
+	val errorCode: Int? = null
 )
 
 class YoutubeViewModel : ViewModel() {
@@ -52,7 +53,8 @@ class YoutubeViewModel : ViewModel() {
 		_mostPopularVideoState.value = _mostPopularVideoState.value?.copy(
 			dataList = emptyList(),
 			isLoading = true,
-			isError = false
+			isError = false,
+			errorCode = null
 		)
 
 		CoroutineScope(Dispatchers.IO).launch {
@@ -67,13 +69,15 @@ class YoutubeViewModel : ViewModel() {
 					_mostPopularVideoState.value = _mostPopularVideoState.value?.copy(
 						dataList = response.body()?.items ?: emptyList(),
 						isLoading = false,
-						isError = false
+						isError = false,
+						errorCode = null
 					)
 				} else {
 					_mostPopularVideoState.value = _mostPopularVideoState.value?.copy(
 						dataList = emptyList(),
 						isLoading = false,
-						isError = true
+						isError = true,
+						errorCode = response.code()
 					)
 				}
 			}
@@ -85,6 +89,7 @@ class YoutubeViewModel : ViewModel() {
 			dataList = emptyList(),
 			isLoading = true,
 			isError = false,
+			errorCode = null,
 		)
 
 		CoroutineScope(Dispatchers.IO).launch {
@@ -97,13 +102,15 @@ class YoutubeViewModel : ViewModel() {
 					_currentVideo.value = _currentVideo.value?.copy(
 						dataList = response.body()?.items ?: emptyList(),
 						isLoading = false,
-						isError = false
+						isError = false,
+						errorCode = null
 					)
 				} else {
 					_currentVideo.value = _currentVideo.value?.copy(
 						dataList = emptyList(),
 						isLoading = false,
-						isError = true
+						isError = true,
+						errorCode = response.code()
 					)
 				}
 			}
@@ -114,7 +121,8 @@ class YoutubeViewModel : ViewModel() {
 		_categoryState.value = _categoryState.value?.copy(
 			dataList = emptyList(),
 			isLoading = true,
-			isError = false
+			isError = false,
+			errorCode = null
 		)
 
 		CoroutineScope(Dispatchers.IO).launch {
@@ -128,13 +136,15 @@ class YoutubeViewModel : ViewModel() {
 					_categoryState.value = _categoryState.value?.copy(
 						dataList = response.body()?.items ?: emptyList(),
 						isLoading = false,
-						isError = false
+						isError = false,
+						errorCode = null
 					)
 				} else {
 					_categoryState.value = _categoryState.value?.copy(
 						dataList = emptyList(),
 						isLoading = false,
-						isError = true
+						isError = true,
+						errorCode = response.code()
 					)
 				}
 			}
@@ -145,7 +155,8 @@ class YoutubeViewModel : ViewModel() {
 		_searchVideoState.value = _searchVideoState.value?.copy(
 			dataList = emptyList(),
 			isLoading = true,
-			isError = false
+			isError = false,
+			errorCode = null
 		)
 
 		CoroutineScope(Dispatchers.IO).launch {
@@ -160,13 +171,15 @@ class YoutubeViewModel : ViewModel() {
 					_searchVideoState.value = _searchVideoState.value?.copy(
 						dataList = response.body()?.items ?: emptyList(),
 						isLoading = false,
-						isError = false
+						isError = false,
+						errorCode = null
 					)
 				} else {
 					_searchVideoState.value = _searchVideoState.value?.copy(
 						dataList = emptyList(),
 						isLoading = false,
-						isError = true
+						isError = true,
+						errorCode = response.code()
 					)
 				}
 			}
@@ -177,7 +190,8 @@ class YoutubeViewModel : ViewModel() {
 		_channelsByCategoryId.value = _channelsByCategoryId.value?.copy(
 			dataList = emptyList(),
 			isLoading = true,
-			isError = false
+			isError = false,
+			errorCode = null
 		)
 
 		CoroutineScope(Dispatchers.IO).launch {
@@ -192,17 +206,18 @@ class YoutubeViewModel : ViewModel() {
 					_channelsByCategoryId.value = _channelsByCategoryId.value?.copy(
 						dataList = response.body()?.items ?: emptyList(),
 						isLoading = false,
-						isError = false
+						isError = false,
+						errorCode = null
 					)
 				} else {
 					_channelsByCategoryId.value = _channelsByCategoryId.value?.copy(
 						dataList = emptyList(),
 						isLoading = false,
-						isError = true
+						isError = true,
+						errorCode = response.code()
 					)
 				}
 			}
 		}
 	}
-
 }

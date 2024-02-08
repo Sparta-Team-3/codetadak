@@ -40,8 +40,6 @@ class MyVideoFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		myFavoriteVideoAdapter.setData(App.prefs.loadMyFavorite())
-
 		initList()
 		initProfileEdit()
 		itemSwipeDelete()
@@ -61,7 +59,6 @@ class MyVideoFragment : Fragment() {
 					}
 				}
 			}
-//			myFavoriteVideoAdapter.setData() // 저장된 값 불러서 리스트 넣기
 		}
 	}
 
@@ -93,6 +90,7 @@ class MyVideoFragment : Fragment() {
 
 	override fun onResume() {
 		super.onResume()
+		myFavoriteVideoAdapter.setData(App.prefs.loadMyFavorite()) // 좋아요 목록 어댑터에 불러오기
 		val userInfo = App.prefs.loadUserProfile() // 프로필 불러오기
 		with(binding) {
 			if(userInfo.profileImage == null || userInfo.profileImage.toString() == "null") {

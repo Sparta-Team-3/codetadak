@@ -50,7 +50,8 @@ class VideoDetailFragment : Fragment() {
         binding.btnLike.setOnClickListener {
             val video = youtubeViewModel.currentVideo.value?.dataList
             if (video != null) {
-                App.prefs.saveMyFavorite(video)
+                App.prefs.saveMyFavorite(video) // 저장된것을 불러와서 중첩으로 쌓아야
+                App.prefs.loadMyFavorite() // 있는경우 넣어주고 없는경우 필터로 빼줘야
             }
         }
         binding.root.setOnTouchListener { _, event -> true }

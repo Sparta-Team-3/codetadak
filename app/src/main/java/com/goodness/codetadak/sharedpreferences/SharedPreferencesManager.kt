@@ -14,17 +14,17 @@ class SharedPreferencesManager(context: Context) {
     private val prefs = context.getSharedPreferences(Constants.PREFS_FILENAME,Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    fun saveMyFavorite (list: MutableList<VideoItem>) {
+    fun saveMyFavorite (list: List<VideoItem>) {
         val json = gson.toJson(list)
         prefs.edit().putString(Constants.KEY_FAVORITE,json).apply()
     }
 
-    fun loadMyFavorite () : MutableList<VideoItem>{
-        var result : MutableList<VideoItem> = mutableListOf()
+    fun loadMyFavorite () : List<VideoItem>{
+        var result : List<VideoItem> = listOf()
         if(prefs.contains(Constants.KEY_FAVORITE)) {
             val json = prefs.getString(Constants.KEY_FAVORITE, Constants.DEFAULT_STRING)
             try {
-                val typeToken = object : TypeToken<MutableList<VideoItem>>() {}.type
+                val typeToken = object : TypeToken<List<VideoItem>>() {}.type
                 result  = gson.fromJson(json, typeToken)
             } catch (e: JsonParseException) {
                 e.printStackTrace()

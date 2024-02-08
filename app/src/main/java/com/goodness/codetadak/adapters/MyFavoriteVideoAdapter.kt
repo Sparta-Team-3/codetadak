@@ -12,7 +12,7 @@ import com.goodness.codetadak.databinding.MyfavoritevideoListBinding
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
 
 class MyFavoriteVideoAdapter(private val youtubeViewModel: YoutubeViewModel) : RecyclerView.Adapter<MyFavoriteVideoAdapter.MyVideoHolder>() {
-    private var myVideoList = mutableListOf<VideoItem>()
+    private var myVideoList = listOf<VideoItem>()
     interface MyVideoItemClick {
         fun onClick(position: Int)
     }
@@ -26,7 +26,7 @@ class MyFavoriteVideoAdapter(private val youtubeViewModel: YoutubeViewModel) : R
         holder.bind(myVideoList[position])
         holder.itemView.setOnClickListener {
             myVideoItemClick?.onClick(position)
-            youtubeViewModel
+            youtubeViewModel.setCurrentVideoById(myVideoList[position].id)
         }
     }
 
@@ -43,20 +43,20 @@ class MyFavoriteVideoAdapter(private val youtubeViewModel: YoutubeViewModel) : R
         }
     }
 
-    fun setData(newData : MutableList<VideoItem>) {
+    fun setData(newData : List<VideoItem>) {
         myVideoList = newData
         notifyDataSetChanged()
     }
 
     fun removeData(position: Int) {
-        myVideoList.removeAt(position)
+        myVideoList.toMutableList().removeAt(position)
         notifyItemRemoved(position)
     }
 
     fun dataAt(position: Int) = myVideoList[position]
 
     fun insertData(position: Int, item: VideoItem) {
-        myVideoList.add(position,item)
+        myVideoList.toMutableList().add(position,item)
         notifyItemInserted(position)
     }
 }

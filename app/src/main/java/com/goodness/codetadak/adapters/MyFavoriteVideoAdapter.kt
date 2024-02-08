@@ -1,17 +1,20 @@
 package com.goodness.codetadak.adapters
 
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.goodness.codetadak.api.responses.Item
 import com.goodness.codetadak.api.responses.VideoItem
 import com.goodness.codetadak.databinding.MyfavoritevideoListBinding
+import com.goodness.codetadak.viewmodels.YoutubeViewModel
 
-class MyFavoriteVideoAdapter() : RecyclerView.Adapter<MyFavoriteVideoAdapter.MyVideoHolder>() {
+class MyFavoriteVideoAdapter(private val youtubeViewModel: YoutubeViewModel) : RecyclerView.Adapter<MyFavoriteVideoAdapter.MyVideoHolder>() {
     private var myVideoList = mutableListOf<VideoItem>()
     interface MyVideoItemClick {
-        fun onClick(view: View, position: Int)
+        fun onClick(position: Int)
     }
     var myVideoItemClick: MyVideoItemClick? = null
 
@@ -22,7 +25,8 @@ class MyFavoriteVideoAdapter() : RecyclerView.Adapter<MyFavoriteVideoAdapter.MyV
     override fun onBindViewHolder(holder: MyFavoriteVideoAdapter.MyVideoHolder, position: Int) {
         holder.bind(myVideoList[position])
         holder.itemView.setOnClickListener {
-            myVideoItemClick?.onClick(it,position)
+            myVideoItemClick?.onClick(position)
+            youtubeViewModel
         }
     }
 
@@ -32,7 +36,7 @@ class MyFavoriteVideoAdapter() : RecyclerView.Adapter<MyFavoriteVideoAdapter.MyV
         fun bind(item: VideoItem) {
             with(binding) {
                 Glide.with(root).load(item.snippet.thumbnails.high.url).into(ivMyfavoriteThumbnail)
-                tvMyfavoriteTitle.setText(item.snippet.title)
+                tvMyfavoriteTitle.text = Html.fromHtml(item.snippet.title, Html.FROM_HTML_MODE_LEGACY)
                 tvMyfavoriteInfo.setText(item.snippet.description)
 
             }
@@ -42,5 +46,17 @@ class MyFavoriteVideoAdapter() : RecyclerView.Adapter<MyFavoriteVideoAdapter.MyV
     fun setData(newData : MutableList<VideoItem>) {
         myVideoList = newData
         notifyDataSetChanged()
+    }
+
+    fun removeData(position: Int) {
+        myVideoList.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun dataAt(position: Int) = myVideoList[position]
+
+    fun insertData(position: Int, item: VideoItem) {
+        myVideoList.add(position,item)
+        notifyItemInserted(position)
     }
 }

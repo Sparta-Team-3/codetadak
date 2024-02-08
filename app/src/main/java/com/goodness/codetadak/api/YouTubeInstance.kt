@@ -10,7 +10,7 @@ object YouTubeInstance {
 	private const val BASE_URL = "https://www.googleapis.com/"
 
 	// TODO: YOUTUBE KEY 추가, 헤더아님!!
-	private const val API_KEY = "AIzaSyAeJ5Go0_1he3DeKRU_kqQY7ktO0-aYh2c"
+	private const val API_KEY = "AIzaSyBX6gFCr8YuTle5Y3YriFmodA_HrP5i75M"
 
 	private val client = OkHttpClient.Builder()
 		.addInterceptor { chain ->

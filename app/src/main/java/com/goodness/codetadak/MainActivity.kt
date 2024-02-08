@@ -15,43 +15,41 @@ import com.goodness.codetadak.viewmodels.YoutubeViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
-    lateinit var youtubeViewModel : YoutubeViewModel
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val detailFragment = VideoDetailFragment()
-    private val bundle = Bundle()
+	private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+	private val detailFragment = VideoDetailFragment()
+	private val bundle = Bundle()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        youtubeViewModel = ViewModelProvider(this).get(YoutubeViewModel::class.java)
-        initSwiper()
-    }
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setContentView(binding.root)
+		initSwiper()
+	}
 
-    private fun initSwiper() = with(binding) {
-        vpMain.adapter = MainViewPagerAdapter(this@MainActivity)
+	private fun initSwiper() = with(binding) {
+		vpMain.adapter = MainViewPagerAdapter(this@MainActivity)
 
-        TabLayoutMediator(tlNavigator, vpMain) { tab, position ->
-            tab.text = when (position) {
-                0 -> getString(R.string.fragment_1)
-                1 -> getString(R.string.fragment_2)
-                2 -> getString(R.string.fragment_3)
-                else -> ""
-            }
-            when (position) {
-                0 -> tab.setIcon(R.drawable.ic_home)
-                1 -> tab.setIcon(R.drawable.ic_search)
-                2 -> tab.setIcon(R.drawable.ic_mypage)
-            }
-        }.attach()
-        vpMain.setPageTransformer(DepthPageTransformer())
-    }
+		TabLayoutMediator(tlNavigator, vpMain) { tab, position ->
+			tab.text = when (position) {
+				0 -> getString(R.string.fragment_1)
+				1 -> getString(R.string.fragment_2)
+				2 -> getString(R.string.fragment_3)
+				else -> ""
+			}
+			when (position) {
+				0 -> tab.setIcon(R.drawable.ic_home)
+				1 -> tab.setIcon(R.drawable.ic_search)
+				2 -> tab.setIcon(R.drawable.ic_mypage)
+			}
+		}.attach()
+		vpMain.setPageTransformer(DepthPageTransformer())
+	}
 
-    fun replace() {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.setCustomAnimations(R.anim.to_bottom, R.anim.from_top)
-            .replace(R.id.video_detail_container, detailFragment).commit()
-    }
+	fun replace() {
+		val fragmentManager = supportFragmentManager
+		val fragmentTransaction = fragmentManager.beginTransaction()
+		fragmentTransaction.setCustomAnimations(R.anim.to_bottom, R.anim.from_top)
+			.replace(R.id.video_detail_container, detailFragment).commit()
+	}
 
     override fun onBackPressed() {
         val fgList = supportFragmentManager.fragments

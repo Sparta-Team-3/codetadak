@@ -60,6 +60,7 @@ class SearchFragment : Fragment() {
 				(requireActivity() as MainActivity).replace()
 			}
 		})
+		searchListAdapter.notifyDataSetChanged()
 	}
 
 	private fun initList() = with(binding) {

@@ -3,12 +3,12 @@ package com.goodness.codetadak.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.goodness.codetadak.api.responses.Item
-import com.goodness.codetadak.api.responses.VideosResponse
+import com.bumptech.glide.Glide
+import com.goodness.codetadak.api.responses.VideoItem
 import com.goodness.codetadak.databinding.ItemHomeBinding
 
 class HomeMostViewedAdapter : RecyclerView.Adapter<HomeMostViewedAdapter.ViewHolder>() {
-    private var items = listOf<Item>()
+    private var items: List<VideoItem> = listOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeMostViewedAdapter.ViewHolder {
         val binding = ItemHomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
@@ -16,9 +16,11 @@ class HomeMostViewedAdapter : RecyclerView.Adapter<HomeMostViewedAdapter.ViewHol
 
     override fun onBindViewHolder(holder: HomeMostViewedAdapter.ViewHolder, position: Int) {
         val item = items[position]
-        holder.ivThumbnail.setImageResource(item.thumbnail)
-        holder.tvTitle.text = item.title
-        holder.tvDescription.text = item.description
+        Glide.with(holder.ivThumbnail.context)
+            .load(item.snippet.thumbnails.default.url)
+            .into(holder.ivThumbnail)
+        holder.tvTitle.text = item.snippet.title
+        holder.tvDescription.text = item.snippet.description
     }
 
     override fun getItemCount(): Int {
@@ -35,8 +37,8 @@ class HomeMostViewedAdapter : RecyclerView.Adapter<HomeMostViewedAdapter.ViewHol
         val tvDescription = binding.tvItemHomeDescription
     }
 
-    fun setData(newData: List<Item>) {
-        items = newData
+    fun setData(items: List<VideoItem>) {
+        this.items = items
         notifyDataSetChanged()
     }
 

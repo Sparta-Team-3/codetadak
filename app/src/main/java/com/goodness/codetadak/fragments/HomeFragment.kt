@@ -5,22 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.goodness.codetadak.R
 import com.goodness.codetadak.adapters.HomeCategoryChannelsAdapter
 import com.goodness.codetadak.adapters.HomeCategoryVideosAdapter
 import com.goodness.codetadak.adapters.HomeMostViewedAdapter
 import com.goodness.codetadak.adapters.SpinnerAdapter
-import com.goodness.codetadak.api.responses.Item
 import com.goodness.codetadak.databinding.FragmentHomeBinding
 import com.goodness.codetadak.viewmodels.HomeViewModel
 
 class HomeFragment : Fragment() {
 	private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
-	private val viewModel by lazy { HomeViewModel() }
-	private val homeMostViewedAdapter by lazy { HomeMostViewedAdapter() }
-	private val homeCategoryVideosAdapter by lazy { HomeCategoryVideosAdapter() }
-	private val homeCategoryChannelsAdapter by lazy { HomeCategoryChannelsAdapter() }
+	private lateinit var viewModel: HomeViewModel
+	private lateinit var homeMostViewedAdapter: HomeMostViewedAdapter
+	private lateinit var homeCategoryVideosAdapter : HomeCategoryVideosAdapter
+	private lateinit var homeCategoryChannelsAdapter: HomeCategoryChannelsAdapter
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 	}
@@ -32,35 +32,43 @@ class HomeFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		// RecyclerView 가로 방향 설정 및 어댑터 연결
-		val mostViewedData = listOf(
-			Item(R.drawable.img_example, "Most 1", "Description Most 1"),
-			Item(R.drawable.img_example, "Most 2", "Description Most 2"),
-		)
-		homeMostViewedAdapter.setData(mostViewedData)
+		viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+		homeMostViewedAdapter = HomeMostViewedAdapter()
+		homeCategoryVideosAdapter = HomeCategoryVideosAdapter()
+		homeCategoryChannelsAdapter = HomeCategoryChannelsAdapter()
+
 		binding.rvMainMostViewedVideos.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 		binding.rvMainMostViewedVideos.adapter = homeMostViewedAdapter
 
-		val categoryData = listOf(
-			Item(R.drawable.img_example, "Category 1", "Description Category 1"),
-			Item(R.drawable.img_example, "Category 2", "Description Category 2"),
-		)
-		homeCategoryVideosAdapter.setData(categoryData)
 		binding.rvMainCategoryVideos.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 		binding.rvMainCategoryVideos.adapter = homeCategoryVideosAdapter
 
-		val channelData = listOf(
-			Item(R.drawable.img_example, "Channel 1", "Description Channel 1"),
-			Item(R.drawable.img_example, "Channel 2", "Description Channel 2"),
-		)
-		homeCategoryChannelsAdapter.setData(channelData)
 		binding.rvMainCategoryChannels.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 		binding.rvMainCategoryChannels.adapter = homeCategoryChannelsAdapter
 
-		// Spinner 설정
-		val items = listOf("Java", "Python", "Kotlin", "Swift", "Dart", "JavaScript", "C++", "C#", "Go", "Ruby", "Rust", "Scala", "TypeScript", "PHP", "HTML", "CSS")
-		val adapter = SpinnerAdapter(requireContext(), items)
-		binding.spinnerMainCategoryVideos.adapter = adapter
+		// 가장 인기 있는 비디오 목록 조회
+		viewModel.videosResponse.observe(viewLifecycleOwner, Observer{ response ->
+			// videosResponse 변수에는 가장 인기 있는 비디오 목록이 있습니다.
+			homeMostViewedAdapter.setData(response.items)
+		})
 
+		viewModel.getMostPopularVideos()
+
+		// 비디오 카테고리 조회
+		viewModel.getVideoCategories("KR", "ko")
+		viewModel.videoCategoriesResponse.observe(viewLifecycleOwner, Observer{ response ->
+			val categories = response.items.map { it.snippet.title }
+			val adapter = SpinnerAdapter(requireContext(), categories)
+			binding.spinnerMainCategoryVideos.adapter = adapter
+			// 카테고리 별 비디오 목록 조회
+			response.items.forEach { category ->
+				viewModel.getVideosByCategory(category.id, "KR")
+				viewModel.videosByCategoryResponse.observe(viewLifecycleOwner, Observer{ videosResponse ->
+					// RecyclerView에 비디오 목록 설정
+					homeCategoryVideosAdapter.setData(videosResponse.items)
+				})
+			}
+		})
+		
 	}
 }

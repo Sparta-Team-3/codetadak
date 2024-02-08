@@ -14,7 +14,7 @@ class SharedPreferencesManager(context: Context) {
     private val prefs = context.getSharedPreferences(Constants.PREFS_FILENAME,Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    fun saveMyFavorite (list: MutableList<VideoItem>) {
+    fun saveMyFavorite (list: List<VideoItem>) {
         val json = gson.toJson(list)
         prefs.edit().putString(Constants.KEY_FAVORITE,json).apply()
     }

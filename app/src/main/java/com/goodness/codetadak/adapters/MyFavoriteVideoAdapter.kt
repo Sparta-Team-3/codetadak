@@ -1,5 +1,6 @@
 package com.goodness.codetadak.adapters
 
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +9,12 @@ import com.bumptech.glide.Glide
 import com.goodness.codetadak.api.responses.Item
 import com.goodness.codetadak.api.responses.VideoItem
 import com.goodness.codetadak.databinding.MyfavoritevideoListBinding
+import com.goodness.codetadak.viewmodels.YoutubeViewModel
 
-class MyFavoriteVideoAdapter() : RecyclerView.Adapter<MyFavoriteVideoAdapter.MyVideoHolder>() {
-    private var myVideoList = mutableListOf<Item>()
+class MyFavoriteVideoAdapter(private val youtubeViewModel: YoutubeViewModel) : RecyclerView.Adapter<MyFavoriteVideoAdapter.MyVideoHolder>() {
+    private var myVideoList = mutableListOf<VideoItem>()
     interface MyVideoItemClick {
-        fun onClick(view: View, position: Int)
+        fun onClick(position: Int)
     }
     var myVideoItemClick: MyVideoItemClick? = null
 
@@ -23,29 +25,25 @@ class MyFavoriteVideoAdapter() : RecyclerView.Adapter<MyFavoriteVideoAdapter.MyV
     override fun onBindViewHolder(holder: MyFavoriteVideoAdapter.MyVideoHolder, position: Int) {
         holder.bind(myVideoList[position])
         holder.itemView.setOnClickListener {
-            myVideoItemClick?.onClick(it,position)
+            myVideoItemClick?.onClick(position)
+            youtubeViewModel
         }
     }
 
     override fun getItemCount(): Int = myVideoList.size
 
     inner class MyVideoHolder(private val binding : MyfavoritevideoListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Item) {
+        fun bind(item: VideoItem) {
             with(binding) {
-//                Glide.with(root).load(item.snippet.thumbnails.high.url).into(ivMyfavoriteThumbnail)
-//                tvMyfavoriteTitle.setText(item.snippet.title)
-//                tvMyfavoriteInfo.setText(item.snippet.description)
-
-                // 더미 데이터 작업
-                ivMyfavoriteThumbnail.setImageResource(item.thumbnail)
-                tvMyfavoriteTitle.setText(item.title)
-                tvMyfavoriteInfo.setText(item.description)
+                Glide.with(root).load(item.snippet.thumbnails.high.url).into(ivMyfavoriteThumbnail)
+                tvMyfavoriteTitle.text = Html.fromHtml(item.snippet.title, Html.FROM_HTML_MODE_LEGACY)
+                tvMyfavoriteInfo.setText(item.snippet.description)
 
             }
         }
     }
 
-    fun setData(newData : MutableList<Item>) {
+    fun setData(newData : MutableList<VideoItem>) {
         myVideoList = newData
         notifyDataSetChanged()
     }
@@ -57,7 +55,7 @@ class MyFavoriteVideoAdapter() : RecyclerView.Adapter<MyFavoriteVideoAdapter.MyV
 
     fun dataAt(position: Int) = myVideoList[position]
 
-    fun insertData(position: Int, item: Item) {
+    fun insertData(position: Int, item: VideoItem) {
         myVideoList.add(position,item)
         notifyItemInserted(position)
     }

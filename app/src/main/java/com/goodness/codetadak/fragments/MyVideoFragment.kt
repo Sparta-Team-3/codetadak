@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.goodness.codetadak.MainActivity
 import com.goodness.codetadak.R
 import com.goodness.codetadak.adapters.MyFavoriteVideoAdapter
 import com.goodness.codetadak.adapters.SwipeHelperCallback
@@ -18,11 +20,13 @@ import com.goodness.codetadak.edtitprofiledialog.EditMyProfileDialog
 import com.goodness.codetadak.edtitprofiledialog.OkClick
 import com.goodness.codetadak.databinding.FragmentMyVideoBinding
 import com.goodness.codetadak.sharedpreferences.App
+import com.goodness.codetadak.viewmodels.YoutubeViewModel
 
 class MyVideoFragment : Fragment() {
 	private var _binding: FragmentMyVideoBinding? = null
 	private val binding get() = _binding!!
-	private val myFavoriteVideoAdapter by lazy { MyFavoriteVideoAdapter() }
+	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
+	private val myFavoriteVideoAdapter by lazy { MyFavoriteVideoAdapter(youtubeViewModel) }
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 	}
@@ -38,14 +42,11 @@ class MyVideoFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		val dummyList = mutableListOf<Item>(
-			Item(R.drawable.img_example,"my_favorite_video", "description")
-		)
-		myFavoriteVideoAdapter.setData(dummyList)
+		myFavoriteVideoAdapter.setData(App.prefs.loadMyFavorite())
 
-		initList() // 리스트 띄우기
-		initProfileEdit() // 프로필 수정
-		itemSwipeDelete() // 스와이프 하여 삭제
+		initList()
+		initProfileEdit()
+		itemSwipeDelete()
 
 	}
 
@@ -56,8 +57,8 @@ class MyVideoFragment : Fragment() {
 				setHasFixedSize(true)
 				adapter = myFavoriteVideoAdapter.apply {
 					myVideoItemClick = object : MyFavoriteVideoAdapter.MyVideoItemClick{
-						override fun onClick(view: View, position: Int) {
-							// 아이템 목록 클릭시 DetailFragment 호출 및 데이터 전달?
+						override fun onClick(position: Int) {
+							(activity as? MainActivity)?.replace()
 						}
 					}
 				}

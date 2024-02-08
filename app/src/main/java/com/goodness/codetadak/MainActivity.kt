@@ -54,27 +54,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(binding.vpMain.currentItem == 0) {
-            var builder = AlertDialog.Builder(this)
-            builder.setIcon(R.drawable.ic_doublechat)
-            builder.setTitle("종료")
-            builder.setMessage("종료하시겠습니까?")
+        val fgList = supportFragmentManager.fragments
+        if(fgList.isNotEmpty()){
+            if(binding.vpMain.currentItem == 0) {
+                var builder = AlertDialog.Builder(this)
+                builder.setIcon(R.drawable.ic_doublechat)
+                builder.setTitle("종료")
+                builder.setMessage("종료하시겠습니까?")
 
-            val listener = object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, which: Int) {
-                    when(which) {
-                        DialogInterface.BUTTON_POSITIVE -> if(!isFinishing) finish()
-                        DialogInterface.BUTTON_NEGATIVE -> dialog?.dismiss()
+                val listener = object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        when(which) {
+                            DialogInterface.BUTTON_POSITIVE -> if(!isFinishing) finish()
+                            DialogInterface.BUTTON_NEGATIVE -> dialog?.dismiss()
+                        }
                     }
                 }
+                builder.setPositiveButton("확인",listener)
+                builder.setNegativeButton("취소",listener)
+                builder.show()
             }
-            builder.setPositiveButton("확인",listener)
-            builder.setNegativeButton("취소",listener)
-            builder.show()
-
-        }
-        else { // 페이지가 제일 첫장이 아닐경우 뒤로가기 클릭시 페이지 앞으로
-            binding.vpMain.currentItem = binding.vpMain.currentItem - 1
+            else { // 페이지가 제일 첫장이 아닐경우 뒤로가기 클릭시 페이지 앞으로
+                binding.vpMain.currentItem = binding.vpMain.currentItem - 1
+            }
         }
     }
 

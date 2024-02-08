@@ -11,26 +11,22 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-<<<<<<< HEAD
 import com.goodness.codetadak.MainActivity
-=======
 import com.goodness.codetadak.R
 import com.goodness.codetadak.adapters.LanguageListAdapter
->>>>>>> dev
 import com.goodness.codetadak.adapters.SearchListListAdapter
 import com.goodness.codetadak.databinding.FragmentSearchBinding
 import com.goodness.codetadak.viewmodels.LanguageViewModel
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
-<<<<<<< HEAD
 import kotlinx.coroutines.launch
-=======
->>>>>>> dev
+
 
 class SearchFragment : Fragment() {
 	private lateinit var binding: FragmentSearchBinding
 
 	private val languageViewModel by lazy { ViewModelProvider(requireActivity())[LanguageViewModel::class.java] }
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
+
 
 	private val languageListAdapter by lazy {
 		LanguageListAdapter(requireActivity()) {
@@ -58,7 +54,7 @@ class SearchFragment : Fragment() {
 		initList()
 		initViewModel()
 		initHandler()
-		adapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
+		searchListAdapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
 			override fun onItemClick(position: Int) {
 				Log.d("asd","asd: $position")
 				(requireActivity() as MainActivity).replace()

@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.goodness.codetadak.R
 import com.goodness.codetadak.api.responses.VideoItem
 import com.goodness.codetadak.databinding.FragmentVideoDetailBinding
+import com.goodness.codetadak.sharedpreferences.App
 import com.goodness.codetadak.viewmodels.DataState
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
 
@@ -33,12 +34,14 @@ class VideoDetailFragment : Fragment() {
 
         youtubeViewModel.currentVideo.observe(viewLifecycleOwner) {
             if (it.dataList.isNotEmpty()) {
-                Glide.with(binding.root)
-                    .load(it.dataList[0].snippet.thumbnails.high.url)
-                    .into(binding.ivThumbnail)
-                binding.tvVideoTitle.text = it.dataList[0].snippet.title
-                binding.tvChannelTitle.text = it.dataList[0].snippet.channelTitle
-                binding.tvDescription.text = it.dataList[0].snippet.description
+                with(binding) {
+                    Glide.with(root)
+                        .load(it.dataList[0].snippet.thumbnails.high.url)
+                        .into(ivThumbnail)
+                    tvVideoTitle.text = it.dataList[0].snippet.title
+                    tvChannelTitle.text = it.dataList[0].snippet.channelTitle
+                    tvDescription.text = it.dataList[0].snippet.description
+                }
             }
         }
 
@@ -47,6 +50,13 @@ class VideoDetailFragment : Fragment() {
                 .setCustomAnimations(R.anim.to_top, R.anim.from_bottom).remove(this).commit()
             requireActivity().supportFragmentManager.popBackStack()
         }
+        binding.btnLike.setOnClickListener {
+            val video = youtubeViewModel.currentVideo.value?.dataList
+            if (video != null) {
+                App.prefs.saveMyFavorite(video)
+            }
+        }
+        binding.root.setOnTouchListener { _, event -> true }
     }
 
     override fun onResume() {

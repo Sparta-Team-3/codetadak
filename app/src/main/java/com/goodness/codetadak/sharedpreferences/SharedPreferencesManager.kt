@@ -8,12 +8,13 @@ import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import androidx.core.net.toUri
+import com.goodness.codetadak.api.responses.VideoItem
 
 class SharedPreferencesManager(context: Context) {
     private val prefs = context.getSharedPreferences(Constants.PREFS_FILENAME,Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    fun saveMyFavorite (list: MutableList<VideosResponse>) {
+    fun saveMyFavorite (list: List<VideoItem>) {
         val json = gson.toJson(list)
         prefs.edit().putString(Constants.KEY_FAVORITE,json).apply()
     }

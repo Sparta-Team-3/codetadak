@@ -112,7 +112,13 @@ class VideoDetailFragment : Fragment() {
 	}
 
 
-	override fun onResume() {
-		super.onResume()
-	}
+    override fun onResume() {
+        super.onResume()
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

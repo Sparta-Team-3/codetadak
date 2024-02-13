@@ -1,7 +1,6 @@
 package com.goodness.codetadak.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.goodness.codetadak.CircleProgressDialog
 import com.goodness.codetadak.MainActivity
 import com.goodness.codetadak.R
 import com.goodness.codetadak.adapters.HomeCategoryChannelsAdapter
@@ -30,6 +30,8 @@ class HomeFragment : Fragment() {
 	private val homeCategoryChannelsAdapter by lazy { HomeCategoryChannelsAdapter() }
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 	private val likeViewModel by lazy { ViewModelProvider(requireActivity())[LikeViewModel::class.java] }
+	private var loadingDialog = CircleProgressDialog()
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 	}
@@ -46,7 +48,6 @@ class HomeFragment : Fragment() {
 
 		homeMostViewedAdapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
 			override fun onItemClick(position: Int) {
-				Log.d("asd", "asd: $position")
 				(requireActivity() as MainActivity).replace()
 			}
 		})
@@ -81,6 +82,7 @@ class HomeFragment : Fragment() {
 			}
 		})
 
+
 		binding.spinnerMainCategoryVideos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 				// 선택된 카테고리에 속하는 비디오 목록 조회
@@ -98,7 +100,7 @@ class HomeFragment : Fragment() {
 			}
 		}
 
-		viewModel.videosBySelectedCategoryResponse.observe(viewLifecycleOwner, Observer{ response ->
+		viewModel.videosBySelectedCategoryResponse.observe(viewLifecycleOwner, Observer { response ->
 			// RecyclerView에 비디오 목록 설정
 			homeCategoryVideosAdapter.setData(response.items)
 		})

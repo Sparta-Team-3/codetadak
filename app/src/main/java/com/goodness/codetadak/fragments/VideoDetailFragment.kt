@@ -1,5 +1,6 @@
 package com.goodness.codetadak.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,8 @@ class VideoDetailFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 
 		youtubeViewModel.currentVideo.observe(viewLifecycleOwner) {
+			binding.sflShimmerContainer.visibility = if (it.isError) View.VISIBLE else View.GONE
+
 			if (it.dataList.isNotEmpty()) {
 				with(binding) {
 					Glide.with(root)
@@ -48,7 +51,9 @@ class VideoDetailFragment : Fragment() {
 					isFavorite =
 						youtubeViewModel.currentVideo.value!!.dataList[0].snippet.isFavorite == true
 
-					val isLike = likeViewModel.likeVideos.value?.any { videoItem -> videoItem.id == it.dataList[0].id } ?: false
+					val isLike =
+						likeViewModel.likeVideos.value?.any { videoItem -> videoItem.id == it.dataList[0].id }
+							?: false
 
 					binding.tvLike.text = getString(if (isLike) R.string.disLike else R.string.like)
 				}
@@ -68,7 +73,8 @@ class VideoDetailFragment : Fragment() {
 		with(binding) {
 			btnDown.setOnClickListener {
 				requireActivity().supportFragmentManager.beginTransaction()
-					.setCustomAnimations(R.anim.to_top, R.anim.from_bottom).remove(this@VideoDetailFragment).commit()
+					.setCustomAnimations(R.anim.to_top, R.anim.from_bottom)
+					.remove(this@VideoDetailFragment).commit()
 				requireActivity().supportFragmentManager.popBackStack()
 			}
 
@@ -82,22 +88,12 @@ class VideoDetailFragment : Fragment() {
 
 			btnLike.setOnClickListener {
 				val video = youtubeViewModel.currentVideo.value?.dataList?.get(0)
-//				isFavorite = !isFavorite
-//				if (!isFavorite) {
-//					icLike.setImageResource(R.drawable.ic_like_empty)
-//					Toast.makeText(context, "좋아요 리스트에서 삭제되었습니다.", Toast.LENGTH_SHORT).show()
-//				} else {
-//					icLike.setImageResource(R.drawable.ic_like_filled)
-//					Toast.makeText(context, "좋아요 리스트에 추가되었습니다.", Toast.LENGTH_SHORT).show()
-//					if (video != null) {
-//						App.prefs.saveMyFavorite(video)
-//					}
-//				}
-
 				likeViewModel.setLikeList(video!!)
 			}
 
-
+			btnShare.setOnClickListener {
+				shareContent()
+			}
 			root.setOnTouchListener { _, event -> true }
 		}
 
@@ -105,20 +101,31 @@ class VideoDetailFragment : Fragment() {
 			override fun handleOnBackPressed() {
 				// 뒤로 가기 시 실행되는 코드
 				requireActivity().supportFragmentManager.beginTransaction()
-					.setCustomAnimations(R.anim.to_top, R.anim.from_bottom).remove(this@VideoDetailFragment).commit()
+					.setCustomAnimations(R.anim.to_top, R.anim.from_bottom)
+					.remove(this@VideoDetailFragment).commit()
 				requireActivity().supportFragmentManager.popBackStack()
 			}
 		})
 	}
 
 
-    override fun onResume() {
-        super.onResume()
-    }
+	override fun onResume() {
+		super.onResume()
+	}
 
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+	override fun onDestroyView() {
+		super.onDestroyView()
+		_binding = null
+	}
+
+	private fun shareContent() {
+		val sharingIntent = Intent(Intent.ACTION_SEND)
+		with(sharingIntent) {
+			type = "text/plain"
+			putExtra(Intent.EXTRA_SUBJECT, "Subject Here")
+		}
+		startActivity(Intent.createChooser(sharingIntent, "Share using"))
+	}
+
 }

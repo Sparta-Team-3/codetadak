@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.goodness.codetadak.CircleProgressDialog
 import com.goodness.codetadak.MainActivity
 import com.goodness.codetadak.R
 import com.goodness.codetadak.adapters.LanguageListAdapter
@@ -18,7 +19,11 @@ import com.goodness.codetadak.adapters.SearchListListAdapter
 import com.goodness.codetadak.databinding.FragmentSearchBinding
 import com.goodness.codetadak.viewmodels.LanguageViewModel
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class SearchFragment : Fragment() {
@@ -26,6 +31,7 @@ class SearchFragment : Fragment() {
 
 	private val languageViewModel by lazy { ViewModelProvider(requireActivity())[LanguageViewModel::class.java] }
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
+	private var loadingDialog = CircleProgressDialog()
 
 
 	private val languageListAdapter by lazy {
@@ -56,6 +62,7 @@ class SearchFragment : Fragment() {
 		initHandler()
 		searchListAdapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
 			override fun onItemClick(position: Int) {
+				showLoading()
 				Log.d("asd","asd: $position")
 				(requireActivity() as MainActivity).replace()
 			}
@@ -113,5 +120,13 @@ class SearchFragment : Fragment() {
 	private fun hideKeyboard() {
 		val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 		inputMethodManager.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+	}
+
+	private fun showLoading() {
+		CoroutineScope(Dispatchers.Main).launch {
+			loadingDialog.show(parentFragmentManager, loadingDialog.tag)
+			withContext(Dispatchers.Default) { delay(1500) }
+			loadingDialog.dismiss()
+		}
 	}
 }

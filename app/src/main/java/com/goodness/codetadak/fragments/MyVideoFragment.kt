@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.bumptech.glide.Glide
+import com.goodness.codetadak.CircleProgressDialog
 import com.goodness.codetadak.MainActivity
 import com.goodness.codetadak.R
 import com.goodness.codetadak.adapters.MyFavoriteVideoAdapter
@@ -19,12 +20,18 @@ import com.goodness.codetadak.edtitprofiledialog.OkClick
 import com.goodness.codetadak.sharedpreferences.App
 import com.goodness.codetadak.sharedpreferences.UserInfo
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MyVideoFragment : Fragment() {
 	private var _binding: FragmentMyVideoBinding? = null
 	private val binding get() = _binding!!
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 	private val myFavoriteVideoAdapter by lazy { MyFavoriteVideoAdapter(youtubeViewModel) }
+	private var loadingDialog = CircleProgressDialog()
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 	}
@@ -56,6 +63,7 @@ class MyVideoFragment : Fragment() {
 				adapter = myFavoriteVideoAdapter.apply {
 					myVideoItemClick = object : MyFavoriteVideoAdapter.MyVideoItemClick{
 						override fun onClick(position: Int) {
+							showLoading()
 							(activity as? MainActivity)?.replace()
 						}
 					}
@@ -89,6 +97,14 @@ class MyVideoFragment : Fragment() {
 	private fun itemSwipeDelete() {
 		val swipeHelperCallback = SwipeHelperCallback(myFavoriteVideoAdapter, requireActivity())
 		ItemTouchHelper(swipeHelperCallback).attachToRecyclerView(binding.rvMyvideo)
+	}
+
+	private fun showLoading() {
+		CoroutineScope(Dispatchers.Main).launch {
+			loadingDialog.show(parentFragmentManager, loadingDialog.tag)
+			withContext(Dispatchers.Default) { delay(1500) }
+			loadingDialog.dismiss()
+		}
 	}
 
 	override fun onResume() {

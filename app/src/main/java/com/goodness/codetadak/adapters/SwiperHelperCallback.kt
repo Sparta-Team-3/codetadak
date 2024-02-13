@@ -1,38 +1,26 @@
 package com.goodness.codetadak.adapters
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffXfermode
 import android.graphics.RectF
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.goodness.codetadak.MainActivity
+import com.goodness.codetadak.ItemTouchHelperListener
 import com.goodness.codetadak.R
-import com.goodness.codetadak.api.responses.VideoItem
-import com.goodness.codetadak.fragments.MyVideoFragment
 import com.goodness.codetadak.viewmodels.LikeViewModel
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
 import com.google.android.material.snackbar.Snackbar
 
 // 롱터치 후 드래그, 스와이프 동작 제어
-class SwipeHelperCallback(
-    private val rviewAdapter: MyFavoriteVideoAdapter ,
-    private val owner: ViewModelStoreOwner,
-    private val context : Context,
-    private val video : VideoItem) :
+class SwipeHelperCallback(private val context : Context, listener : ItemTouchHelperListener) :
     ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
-    private val youtubeViewModel by lazy { ViewModelProvider(owner)[YoutubeViewModel::class.java] }
-    private val likeViewModel by lazy { ViewModelProvider(owner)[LikeViewModel::class.java] }
+    private var itemTouchHelperListener: ItemTouchHelperListener = listener
     // 드래그 일어날 때 동작 (롱터치 후 드래그)
     override fun onMove(
         recyclerView: RecyclerView,
@@ -44,12 +32,9 @@ class SwipeHelperCallback(
 
     // 스와이프 일어날 때 동작
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.layoutPosition
-        val data = rviewAdapter.dataAt(position)
-        // 스와와이프 끝까지 하면 해당 데이터 삭제하기
-        Snackbar.make(viewHolder.itemView, "해당 목록이 삭제되었습니다.", 2000).setAction("복구"){
-
-        }.show()
+//        val position = viewHolder.layoutPosition
+//        val data = rviewAdapter.dataAt(position)
+        itemTouchHelperListener.onItemSwipe(viewHolder.layoutPosition, viewHolder)
     }
 
     override fun onChildDraw(

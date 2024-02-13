@@ -80,22 +80,22 @@ class HomeFragment : Fragment() {
 			}
 		})
 
-		binding.spinnerMainCategoryVideos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-				// 선택된 카테고리에 속하는 비디오 목록 조회
-				val selectedCategory = viewModel.videoCategoriesResponse.value?.items?.get(position)
-				selectedCategory?.let { category ->
-					viewModel.getVideosByCategory(category.id, "KR")
-					viewModel.getChannelsByCategory(category.id, "KR")
-				}
-
-			}
-
-			override fun onNothingSelected(parent: AdapterView<*>?) {
-				// 아무것도 선택되지 않았을 때의 처리
-				viewModel.getMostPopularVideos()
-			}
-		}
+//		binding.spinnerMainCategoryVideos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//				// 선택된 카테고리에 속하는 비디오 목록 조회
+//				val selectedCategory = viewModel.videoCategoriesResponse.value?.items?.get(position)
+//				selectedCategory?.let { category ->
+//					viewModel.getVideosByCategory(category.id, "KR")
+//					viewModel.getChannelsByCategory(category.id, "KR")
+//				}
+//
+//			}
+//
+//			override fun onNothingSelected(parent: AdapterView<*>?) {
+//				// 아무것도 선택되지 않았을 때의 처리
+//				viewModel.getMostPopularVideos()
+//			}
+//		}
 
 		viewModel.videosBySelectedCategoryResponse.observe(viewLifecycleOwner, Observer{ response ->
 			// RecyclerView에 비디오 목록 설정

@@ -101,7 +101,9 @@ class VideoDetailFragment : Fragment() {
                 likeViewModel.setLikeList(video!!)
             }
 
-
+            btnShare.setOnClickListener {
+                shareContent()
+            }
             root.setOnTouchListener { _, event -> true }
         }
 
@@ -125,6 +127,15 @@ class VideoDetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun shareContent() {
+        val sharingIntent = Intent(Intent.ACTION_SEND)
+        with(sharingIntent) {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, "Subject Here")
+        }
+        startActivity(Intent.createChooser(sharingIntent, "Share using"))
     }
 
 }

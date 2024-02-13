@@ -1,28 +1,30 @@
 package com.goodness.codetadak.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.goodness.codetadak.api.responses.Item
+import com.bumptech.glide.Glide
+import com.goodness.codetadak.api.responses.ChannelItem
 import com.goodness.codetadak.databinding.ItemHomeBinding
 
 class HomeCategoryChannelsAdapter : RecyclerView.Adapter<HomeCategoryChannelsAdapter.ViewHolder>() {
-    private var items = listOf<Item>()
+    private var channels: List<ChannelItem> = listOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeCategoryChannelsAdapter.ViewHolder {
         val binding = ItemHomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: HomeCategoryChannelsAdapter.ViewHolder, position: Int) {
-        val item = items[position]
-        holder.ivThumbnail.setImageResource(item.thumbnail)
-        holder.tvTitle.text = item.title
-        holder.tvDescription.text = item.description
+        val channel = channels[position]
+        Glide.with(holder.itemView.context)
+            .load(channel.snippet.thumbnails.default.url)
+            .into(holder.ivThumbnail)
+        holder.tvTitle.text = channel.snippet.title
+        holder.tvDescription.text = channel.snippet.description
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return channels.size
     }
 
     override fun getItemId(position: Int): Long {
@@ -35,8 +37,8 @@ class HomeCategoryChannelsAdapter : RecyclerView.Adapter<HomeCategoryChannelsAda
         val tvDescription = binding.tvItemHomeDescription
     }
 
-    fun setData(newData: List<Item>) {
-        items = newData
+    fun setData(channels: List<ChannelItem>) {
+        this.channels = channels
         notifyDataSetChanged()
     }
 }

@@ -31,6 +31,12 @@ interface YoutubeService {
 		@Query("hl") hl: String
 	): Response<CategoriesResponse>
 
+	@GET("youtube/v3/channels")
+	suspend fun getChannel(
+		@Query("part") part: String = "snippet",
+		@Query("id") id: String
+	): Response<ChannelsResponse>
+
 	@GET("youtube/v3/search")
 	suspend fun searchByKeyword(
 		@Query("part") part: String = "snippet",

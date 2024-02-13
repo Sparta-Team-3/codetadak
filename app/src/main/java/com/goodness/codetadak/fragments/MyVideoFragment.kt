@@ -53,7 +53,6 @@ class MyVideoFragment : Fragment() {
 	private fun initViewModel() {
 		likeViewModel.likeVideos.observe(viewLifecycleOwner) {
 			myFavoriteVideoAdapter.setData(it.sortedBy {data -> data.snippet.title[0] })
-			App.prefs.saveMyFavorite(it)
 		}
 	}
 
@@ -102,7 +101,7 @@ class MyVideoFragment : Fragment() {
 
 	override fun onResume() {
 		super.onResume()
-		myFavoriteVideoAdapter.setData(App.prefs.loadMyFavorite()) // 좋아요 목록 어댑터에 불러오기
+//		myFavoriteVideoAdapter.setData(App.prefs.loadMyFavorite()) // 좋아요 목록 어댑터에 불러오기
 		val userInfo = App.prefs.loadUserProfile() // 프로필 불러오기
 		with(binding) {
 			if (userInfo.profileImage == null || userInfo.profileImage.toString() == "null") {

@@ -2,11 +2,9 @@ package com.goodness.codetadak.adapters
 
 import android.text.Html
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.goodness.codetadak.api.responses.Item
 import com.goodness.codetadak.api.responses.VideoItem
 import com.goodness.codetadak.databinding.MyfavoritevideoListBinding
 import com.goodness.codetadak.viewmodels.YoutubeViewModel

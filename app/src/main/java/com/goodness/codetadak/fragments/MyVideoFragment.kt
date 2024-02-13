@@ -34,8 +34,9 @@ class MyVideoFragment : Fragment() {
 	private val binding get() = _binding!!
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 	private val likeViewModel by lazy { ViewModelProvider(requireActivity())[LikeViewModel::class.java] }
-	private val myFavoriteVideoAdapter by lazy { MyFavoriteVideoAdapter(youtubeViewModel) }
 	private var loadingDialog = CircleProgressDialog()
+	private val myFavoriteVideoAdapter by lazy { MyFavoriteVideoAdapter(youtubeViewModel, likeViewModel) }
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 	}
@@ -59,7 +60,8 @@ class MyVideoFragment : Fragment() {
 
 	private fun initViewModel() {
 		likeViewModel.likeVideos.observe(viewLifecycleOwner) {
-			myFavoriteVideoAdapter.setData(it)
+			myFavoriteVideoAdapter.setData(it.sortedBy {data -> data.snippet.title[0] })
+			App.prefs.saveMyFavorite(it)
 		}
 	}
 
@@ -103,7 +105,7 @@ class MyVideoFragment : Fragment() {
 	}
 
 	private fun itemSwipeDelete() {
-		val swipeHelperCallback = SwipeHelperCallback(myFavoriteVideoAdapter, requireActivity())
+		val swipeHelperCallback = SwipeHelperCallback(requireActivity(), myFavoriteVideoAdapter)
 		ItemTouchHelper(swipeHelperCallback).attachToRecyclerView(binding.rvMyvideo)
 	}
 
@@ -117,7 +119,7 @@ class MyVideoFragment : Fragment() {
 
 	override fun onResume() {
 		super.onResume()
-//		myFavoriteVideoAdapter.setData(App.prefs.loadMyFavorite()) // 좋아요 목록 어댑터에 불러오기
+		myFavoriteVideoAdapter.setData(App.prefs.loadMyFavorite()) // 좋아요 목록 어댑터에 불러오기
 		val userInfo = App.prefs.loadUserProfile() // 프로필 불러오기
 		with(binding) {
 			if (userInfo.profileImage == null || userInfo.profileImage.toString() == "null") {

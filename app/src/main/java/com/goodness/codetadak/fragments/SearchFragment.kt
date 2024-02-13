@@ -6,12 +6,14 @@ import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.goodness.codetadak.CircleProgressDialog
+import androidx.recyclerview.widget.RecyclerView
 import com.goodness.codetadak.MainActivity
 import com.goodness.codetadak.R
 import com.goodness.codetadak.adapters.LanguageListAdapter
@@ -74,8 +76,23 @@ class SearchFragment : Fragment() {
 		rvSearchList.layoutManager = LinearLayoutManager(requireActivity())
 		rvSearchList.adapter = searchListAdapter
 
-		rvLanguageSelect.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
-		rvLanguageSelect.adapter = languageListAdapter
+		rvLanguageSelectList.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+		rvLanguageSelectList.adapter = languageListAdapter
+
+
+		rvLanguageSelectList.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+			override fun onInterceptTouchEvent(view: RecyclerView, event: MotionEvent): Boolean {
+				when (event.action) {
+					MotionEvent.ACTION_DOWN -> {
+						rvLanguageSelectList.parent?.requestDisallowInterceptTouchEvent(true)
+					}
+				}
+				return false
+			}
+
+			override fun onTouchEvent(view: RecyclerView, event: MotionEvent) {}
+			override fun onRequestDisallowInterceptTouchEvent(view: Boolean) {}
+		})
 	}
 
 	private fun initHandler() = with(binding) {

@@ -89,6 +89,7 @@ class HomeFragment : Fragment() {
 			}
 		})
 
+
 		binding.spinnerMainCategoryVideos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 				// 선택된 카테고리에 속하는 비디오 목록 조회

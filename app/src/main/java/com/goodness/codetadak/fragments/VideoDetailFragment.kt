@@ -56,6 +56,13 @@ class VideoDetailFragment : Fragment() {
 							?: false
 
 					binding.tvLike.text = getString(if (isLike) R.string.disLike else R.string.like)
+					binding.icLike.setImageResource(
+						if (isLike) {
+							R.drawable.ic_like_filled
+						} else {
+							R.drawable.ic_like_empty
+						}
+					)
 				}
 			}
 		}
@@ -68,6 +75,13 @@ class VideoDetailFragment : Fragment() {
 			val isLike = it.any { videoItem -> videoItem.id == currentVideo?.id }
 
 			binding.tvLike.text = getString(if (isLike) R.string.disLike else R.string.like)
+			binding.icLike.setImageResource(
+				if (isLike) {
+					R.drawable.ic_like_filled
+				} else {
+					R.drawable.ic_like_empty
+				}
+			)
 		}
 
 		with(binding) {
@@ -77,14 +91,6 @@ class VideoDetailFragment : Fragment() {
 					.remove(this@VideoDetailFragment).commit()
 				requireActivity().supportFragmentManager.popBackStack()
 			}
-
-			icLike.setImageResource(
-				if (isFavorite) {
-					R.drawable.ic_like_filled
-				} else {
-					R.drawable.ic_like_empty
-				}
-			)
 
 			btnLike.setOnClickListener {
 				val video = youtubeViewModel.currentVideo.value?.dataList?.get(0)

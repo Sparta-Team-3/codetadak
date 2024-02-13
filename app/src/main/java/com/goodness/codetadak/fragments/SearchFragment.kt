@@ -27,7 +27,6 @@ class SearchFragment : Fragment() {
 	private val languageViewModel by lazy { ViewModelProvider(requireActivity())[LanguageViewModel::class.java] }
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 
-
 	private val languageListAdapter by lazy {
 		LanguageListAdapter(requireActivity()) {
 			languageViewModel.updateCurLanguage(it)
@@ -56,7 +55,7 @@ class SearchFragment : Fragment() {
 		initHandler()
 		searchListAdapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
 			override fun onItemClick(position: Int) {
-				Log.d("asd","asd: $position")
+				Log.d("asd", "asd: $position")
 				(requireActivity() as MainActivity).replace()
 			}
 		})

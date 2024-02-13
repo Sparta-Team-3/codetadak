@@ -20,12 +20,14 @@ import com.goodness.codetadak.edtitprofiledialog.EditMyProfileDialog
 import com.goodness.codetadak.edtitprofiledialog.OkClick
 import com.goodness.codetadak.sharedpreferences.App
 import com.goodness.codetadak.sharedpreferences.UserInfo
+import com.goodness.codetadak.viewmodels.LikeViewModel
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
 
 class MyVideoFragment : Fragment() {
 	private var _binding: FragmentMyVideoBinding? = null
 	private val binding get() = _binding!!
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
+	private val likeViewModel by lazy { ViewModelProvider(requireActivity())[LikeViewModel::class.java] }
 	private val myFavoriteVideoAdapter by lazy { MyFavoriteVideoAdapter(youtubeViewModel) }
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -45,7 +47,13 @@ class MyVideoFragment : Fragment() {
 		initList()
 		initProfileEdit()
 		itemSwipeDelete()
+		initViewModel()
+	}
 
+	private fun initViewModel() {
+		likeViewModel.likeVideos.observe(viewLifecycleOwner) {
+			myFavoriteVideoAdapter.setData(it)
+		}
 	}
 
 	private fun initList() { // RecyclerView 띄우기
@@ -55,7 +63,7 @@ class MyVideoFragment : Fragment() {
 				addItemDecoration(DividerItemDecoration(requireActivity(),DividerItemDecoration.VERTICAL))
 				setHasFixedSize(true)
 				adapter = myFavoriteVideoAdapter.apply {
-					myVideoItemClick = object : MyFavoriteVideoAdapter.MyVideoItemClick{
+					myVideoItemClick = object : MyFavoriteVideoAdapter.MyVideoItemClick {
 						override fun onClick(position: Int) {
 							(activity as? MainActivity)?.replace()
 						}
@@ -71,9 +79,9 @@ class MyVideoFragment : Fragment() {
 				val editMyPageDialog = EditMyProfileDialog()
 				editMyPageDialog.okClick = object : OkClick {
 					override fun onClick(userInfo: UserInfo) {
-						if(userInfo.profileImage == null) {
+						if (userInfo.profileImage == null) {
 							ivMyvideoProfile.setImageResource(R.drawable.ic_default_profile)
-						}else {
+						} else {
 							Glide.with(binding.root).load(userInfo.profileImage).into(ivMyvideoProfile)
 						}
 						tvMyvideoName.setText(userInfo.name)
@@ -81,7 +89,7 @@ class MyVideoFragment : Fragment() {
 						App.prefs.saveUserProfile(userInfo) // 프로필 저장
 					}
 				}
-				editMyPageDialog.show(requireActivity().supportFragmentManager,"EditMyProfilDialog")
+				editMyPageDialog.show(requireActivity().supportFragmentManager, "EditMyProfilDialog")
 			}
 		}
 	}
@@ -96,9 +104,9 @@ class MyVideoFragment : Fragment() {
 		myFavoriteVideoAdapter.setData(App.prefs.loadMyFavorite()) // 좋아요 목록 어댑터에 불러오기
 		val userInfo = App.prefs.loadUserProfile() // 프로필 불러오기
 		with(binding) {
-			if(userInfo.profileImage == null || userInfo.profileImage.toString() == "null") {
+			if (userInfo.profileImage == null || userInfo.profileImage.toString() == "null") {
 				ivMyvideoProfile.setImageResource(R.drawable.ic_default_profile)
-			}else {
+			} else {
 				Glide.with(binding.root).load(userInfo.profileImage).into(ivMyvideoProfile)
 			}
 			tvMyvideoName.setText(userInfo.name)

@@ -1,6 +1,7 @@
 package com.goodness.codetadak.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,7 +61,7 @@ class MyVideoFragment : Fragment() {
 
 	private fun initViewModel() {
 		likeViewModel.likeVideos.observe(viewLifecycleOwner) {
-			myFavoriteVideoAdapter.setData(it.sortedBy {data -> data.snippet.title[0] })
+			myFavoriteVideoAdapter.setData(it.sortedBy { data -> data.snippet.title[0] })
 			App.prefs.saveMyFavorite(it)
 		}
 	}
@@ -68,13 +69,12 @@ class MyVideoFragment : Fragment() {
 	private fun initList() { // RecyclerView 띄우기
 		with(binding) {
 			with(rvMyvideo) {
-				layoutManager = LinearLayoutManager(requireActivity(),LinearLayoutManager.VERTICAL,false)
-				addItemDecoration(DividerItemDecoration(requireActivity(),DividerItemDecoration.VERTICAL))
+				layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+				addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
 				setHasFixedSize(true)
 				adapter = myFavoriteVideoAdapter.apply {
 					myVideoItemClick = object : MyFavoriteVideoAdapter.MyVideoItemClick {
 						override fun onClick(position: Int) {
-							showLoading()
 							(activity as? MainActivity)?.replace()
 						}
 					}
@@ -107,14 +107,6 @@ class MyVideoFragment : Fragment() {
 	private fun itemSwipeDelete() {
 		val swipeHelperCallback = SwipeHelperCallback(requireActivity(), myFavoriteVideoAdapter)
 		ItemTouchHelper(swipeHelperCallback).attachToRecyclerView(binding.rvMyvideo)
-	}
-
-	private fun showLoading() {
-		CoroutineScope(Dispatchers.Main).launch {
-			loadingDialog.show(parentFragmentManager, loadingDialog.tag)
-			withContext(Dispatchers.Default) { delay(1500) }
-			loadingDialog.dismiss()
-		}
 	}
 
 	override fun onResume() {

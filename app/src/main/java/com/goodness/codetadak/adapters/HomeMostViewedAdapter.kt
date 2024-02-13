@@ -8,11 +8,9 @@ import com.goodness.codetadak.api.responses.VideoItem
 import com.goodness.codetadak.databinding.ItemHomeBinding
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
 
-class HomeMostViewedAdapter(private val youtubeViewModel: YoutubeViewModel) :
-	RecyclerView.Adapter<HomeMostViewedAdapter.ViewHolder>() {
-	interface OnItemClickListener {
-		fun onItemClick(position: Int)
-	}
+class HomeMostViewedAdapter(
+	private val youtubeViewModel: YoutubeViewModel
+) : RecyclerView.Adapter<HomeMostViewedAdapter.ViewHolder>() {
 
 	private var listener: SearchListListAdapter.OnItemClickListener? = null
 
@@ -57,6 +55,10 @@ class HomeMostViewedAdapter(private val youtubeViewModel: YoutubeViewModel) :
 	fun setData(items: List<VideoItem>) {
 		this.items = items
 		notifyDataSetChanged()
+	}
+
+	fun getItem(position: Int): VideoItem {
+		return items[position]
 	}
 
 }

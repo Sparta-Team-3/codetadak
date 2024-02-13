@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.goodness.codetadak.MainActivity
+import com.goodness.codetadak.R
 import com.goodness.codetadak.adapters.HomeCategoryChannelsAdapter
 import com.goodness.codetadak.adapters.HomeCategoryVideosAdapter
 import com.goodness.codetadak.adapters.HomeMostViewedAdapter
@@ -25,7 +26,7 @@ class HomeFragment : Fragment() {
 	private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
 	private val viewModel by lazy { ViewModelProvider(this).get(HomeViewModel::class.java) }
 	private val homeMostViewedAdapter by lazy { HomeMostViewedAdapter(youtubeViewModel) }
-	private val homeCategoryVideosAdapter by lazy { HomeCategoryVideosAdapter() }
+	private val homeCategoryVideosAdapter by lazy { HomeCategoryVideosAdapter(youtubeViewModel) }
 	private val homeCategoryChannelsAdapter by lazy { HomeCategoryChannelsAdapter() }
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 	private val likeViewModel by lazy { ViewModelProvider(requireActivity())[LikeViewModel::class.java] }
@@ -86,7 +87,7 @@ class HomeFragment : Fragment() {
 				val selectedCategory = viewModel.videoCategoriesResponse.value?.items?.get(position)
 				selectedCategory?.let { category ->
 					viewModel.getVideosByCategory(category.id, "KR")
-					viewModel.getChannelsByCategory(category.id, "KR")
+//					viewModel.getChannelsByCategory(category.id, "KR")
 				}
 
 			}
@@ -105,6 +106,37 @@ class HomeFragment : Fragment() {
 		viewModel.channelResponse.observe(viewLifecycleOwner, Observer { response ->
 			// RecyclerView에 채널 정보 설정
 			homeCategoryChannelsAdapter.setData(response.items)
+		})
+
+		// 영상의 thumbnail을 클릭햇을 때 VideoDetailFragment로 이동
+		homeMostViewedAdapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
+			override fun onItemClick(position: Int) {
+				val selectedVideo = homeMostViewedAdapter.getItem(position)
+				viewModel.selectedVideo.value = selectedVideo
+				val videoDetailFragment = VideoDetailFragment()
+
+				// FragmentManager를 사용하여 VideoDetailFragment로 이동
+				val fragmentManager = requireActivity().supportFragmentManager
+				val fragmentTransaction = fragmentManager.beginTransaction()
+				fragmentTransaction.setCustomAnimations(R.anim.to_top, R.anim.from_bottom)
+				fragmentTransaction.replace(R.id.video_detail_container, videoDetailFragment)
+				fragmentTransaction.commit()
+			}
+		})
+
+		homeCategoryVideosAdapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
+			override fun onItemClick(position: Int) {
+				val selectedVideo = homeCategoryVideosAdapter.getItem(position)
+				viewModel.selectedVideo.value = selectedVideo
+				val videoDetailFragment = VideoDetailFragment()
+
+				// FragmentManager를 사용하여 VideoDetailFragment로 이동
+				val fragmentManager = requireActivity().supportFragmentManager
+				val fragmentTransaction = fragmentManager.beginTransaction()
+				fragmentTransaction.setCustomAnimations(R.anim.to_top, R.anim.from_bottom)
+				fragmentTransaction.replace(R.id.video_detail_container, videoDetailFragment)
+				fragmentTransaction.commit()
+			}
 		})
 	}
 }

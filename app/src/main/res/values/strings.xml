@@ -23,4 +23,5 @@
   <string name="myvideo_list">나의 비디오 리스트 목록</string>
   <string name="video_title">영상 제목</string>
   <string name="video_dec">설명문구</string>
+  <string name="disLike">Dislike</string>
 </resources>

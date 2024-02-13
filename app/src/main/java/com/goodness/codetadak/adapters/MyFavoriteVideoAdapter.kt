@@ -53,8 +53,6 @@ class MyFavoriteVideoAdapter(private val youtubeViewModel: YoutubeViewModel, pri
         notifyDataSetChanged()
     }
 
-    fun dataAt(position: Int) = myVideoList[position]
-
     override fun onItemSwipe(position: Int, view: ViewHolder) {
         // 정렬
         val likeVideo = likeViewModel.likeVideos.value?.get(position)

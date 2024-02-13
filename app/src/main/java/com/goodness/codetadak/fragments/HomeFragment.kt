@@ -157,11 +157,7 @@ class HomeFragment : Fragment() {
 				val videoDetailFragment = VideoDetailFragment()
 
 				// FragmentManager를 사용하여 VideoDetailFragment로 이동
-				val fragmentManager = requireActivity().supportFragmentManager
-				val fragmentTransaction = fragmentManager.beginTransaction()
-				fragmentTransaction.setCustomAnimations(R.anim.to_top, R.anim.from_bottom)
-				fragmentTransaction.replace(R.id.video_detail_container, videoDetailFragment)
-				fragmentTransaction.commit()
+				(activity as? MainActivity)?.replace()
 			}
 		})
 
@@ -172,11 +168,7 @@ class HomeFragment : Fragment() {
 				val videoDetailFragment = VideoDetailFragment()
 
 				// FragmentManager를 사용하여 VideoDetailFragment로 이동
-				val fragmentManager = requireActivity().supportFragmentManager
-				val fragmentTransaction = fragmentManager.beginTransaction()
-				fragmentTransaction.setCustomAnimations(R.anim.to_top, R.anim.from_bottom)
-				fragmentTransaction.replace(R.id.video_detail_container, videoDetailFragment)
-				fragmentTransaction.commit()
+				(activity as? MainActivity)?.replace()
 			}
 		})
 	}

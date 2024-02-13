@@ -8,6 +8,7 @@ import com.goodness.codetadak.api.YouTubeInstance
 import com.goodness.codetadak.api.responses.CategoriesResponse
 import com.goodness.codetadak.api.responses.CategoryItem
 import com.goodness.codetadak.api.responses.ChannelsResponse
+import com.goodness.codetadak.api.responses.VideoItem
 import com.goodness.codetadak.api.responses.VideosResponse
 import kotlinx.coroutines.launch
 
@@ -17,6 +18,7 @@ class HomeViewModel : ViewModel() {
     val videosByCategoryResponse: MutableLiveData<VideosResponse> = MutableLiveData()
     val videosBySelectedCategoryResponse: MutableLiveData<VideosResponse> = MutableLiveData()
     val channelResponse: MutableLiveData<ChannelsResponse> = MutableLiveData()
+    val selectedVideo: MutableLiveData<VideoItem> = MutableLiveData()
 
     // 가장 많이 본 영상 목록 조회
     fun getMostPopularVideos() {

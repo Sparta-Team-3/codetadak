@@ -10,6 +10,7 @@ import com.goodness.codetadak.api.responses.SearchItem
 import com.goodness.codetadak.api.responses.VideoItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -130,6 +131,7 @@ class YoutubeViewModel : ViewModel() {
 		)
 
 		CoroutineScope(Dispatchers.IO).launch {
+			delay((Math.random() * 700).toLong())
 			val response = service.getVideo(
 				id = id,
 			)

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.goodness.codetadak.CircleProgressDialog
 import com.goodness.codetadak.MainActivity
 import com.goodness.codetadak.adapters.HomeCategoryChannelsAdapter
 import com.goodness.codetadak.adapters.HomeCategoryVideosAdapter
@@ -20,6 +21,11 @@ import com.goodness.codetadak.databinding.FragmentHomeBinding
 import com.goodness.codetadak.viewmodels.HomeViewModel
 import com.goodness.codetadak.viewmodels.LikeViewModel
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 	private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
@@ -29,6 +35,8 @@ class HomeFragment : Fragment() {
 	private val homeCategoryChannelsAdapter by lazy { HomeCategoryChannelsAdapter() }
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 	private val likeViewModel by lazy { ViewModelProvider(requireActivity())[LikeViewModel::class.java] }
+	private var loadingDialog = CircleProgressDialog()
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 	}
@@ -46,6 +54,7 @@ class HomeFragment : Fragment() {
 		homeMostViewedAdapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
 			override fun onItemClick(position: Int) {
 				Log.d("asd", "asd: $position")
+				showLoading()
 				(requireActivity() as MainActivity).replace()
 			}
 		})
@@ -80,22 +89,23 @@ class HomeFragment : Fragment() {
 			}
 		})
 
-//		binding.spinnerMainCategoryVideos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-//				// 선택된 카테고리에 속하는 비디오 목록 조회
-//				val selectedCategory = viewModel.videoCategoriesResponse.value?.items?.get(position)
-//				selectedCategory?.let { category ->
-//					viewModel.getVideosByCategory(category.id, "KR")
+
+		binding.spinnerMainCategoryVideos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+				// 선택된 카테고리에 속하는 비디오 목록 조회
+				val selectedCategory = viewModel.videoCategoriesResponse.value?.items?.get(position)
+				selectedCategory?.let { category ->
+					viewModel.getVideosByCategory(category.id, "KR")
 //					viewModel.getChannelsByCategory(category.id, "KR")
-//				}
-//
-//			}
-//
-//			override fun onNothingSelected(parent: AdapterView<*>?) {
-//				// 아무것도 선택되지 않았을 때의 처리
-//				viewModel.getMostPopularVideos()
-//			}
-//		}
+				}
+
+			}
+
+			override fun onNothingSelected(parent: AdapterView<*>?) {
+				// 아무것도 선택되지 않았을 때의 처리
+				viewModel.getMostPopularVideos()
+			}
+		}
 
 		viewModel.videosBySelectedCategoryResponse.observe(viewLifecycleOwner, Observer{ response ->
 			// RecyclerView에 비디오 목록 설정
@@ -106,5 +116,13 @@ class HomeFragment : Fragment() {
 			// RecyclerView에 채널 정보 설정
 			homeCategoryChannelsAdapter.setData(response.items)
 		})
+	}
+
+	private fun showLoading() {
+		CoroutineScope(Dispatchers.Main).launch {
+			loadingDialog.show(parentFragmentManager, loadingDialog.tag)
+			withContext(Dispatchers.Default) { delay(1500) }
+			loadingDialog.dismiss()
+		}
 	}
 }

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.goodness.codetadak.CircleProgressDialog
 import com.goodness.codetadak.MainActivity
 import com.goodness.codetadak.R
 import com.goodness.codetadak.adapters.MyFavoriteVideoAdapter
@@ -22,13 +23,20 @@ import com.goodness.codetadak.sharedpreferences.App
 import com.goodness.codetadak.sharedpreferences.UserInfo
 import com.goodness.codetadak.viewmodels.LikeViewModel
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MyVideoFragment : Fragment() {
 	private var _binding: FragmentMyVideoBinding? = null
 	private val binding get() = _binding!!
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 	private val likeViewModel by lazy { ViewModelProvider(requireActivity())[LikeViewModel::class.java] }
+	private var loadingDialog = CircleProgressDialog()
 	private val myFavoriteVideoAdapter by lazy { MyFavoriteVideoAdapter(youtubeViewModel, likeViewModel) }
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 	}
@@ -65,6 +73,7 @@ class MyVideoFragment : Fragment() {
 				adapter = myFavoriteVideoAdapter.apply {
 					myVideoItemClick = object : MyFavoriteVideoAdapter.MyVideoItemClick {
 						override fun onClick(position: Int) {
+							showLoading()
 							(activity as? MainActivity)?.replace()
 						}
 					}
@@ -97,6 +106,14 @@ class MyVideoFragment : Fragment() {
 	private fun itemSwipeDelete() {
 		val swipeHelperCallback = SwipeHelperCallback(requireActivity(), myFavoriteVideoAdapter)
 		ItemTouchHelper(swipeHelperCallback).attachToRecyclerView(binding.rvMyvideo)
+	}
+
+	private fun showLoading() {
+		CoroutineScope(Dispatchers.Main).launch {
+			loadingDialog.show(parentFragmentManager, loadingDialog.tag)
+			withContext(Dispatchers.Default) { delay(1500) }
+			loadingDialog.dismiss()
+		}
 	}
 
 	override fun onResume() {

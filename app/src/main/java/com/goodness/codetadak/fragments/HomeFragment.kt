@@ -35,16 +35,8 @@ class HomeFragment : Fragment() {
 	private val homeCategoryChannelsAdapter by lazy { HomeCategoryChannelsAdapter() }
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 	private val likeViewModel by lazy { ViewModelProvider(requireActivity())[LikeViewModel::class.java] }
-<<<<<<< HEAD
 	private var loadingDialog = CircleProgressDialog()
 
-	private lateinit var homeMostViewedAdapter: HomeMostViewedAdapter
-	private lateinit var homeCategoryVideosAdapter: HomeCategoryVideosAdapter
-	private lateinit var homeCategoryChannelsAdapter: HomeCategoryChannelsAdapter
-
-
-=======
->>>>>>> dev
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 	}
@@ -103,7 +95,7 @@ class HomeFragment : Fragment() {
 				val selectedCategory = viewModel.videoCategoriesResponse.value?.items?.get(position)
 				selectedCategory?.let { category ->
 					viewModel.getVideosByCategory(category.id, "KR")
-					viewModel.getChannelsByCategory(category.id, "KR")
+//					viewModel.getChannelsByCategory(category.id, "KR")
 				}
 
 			}

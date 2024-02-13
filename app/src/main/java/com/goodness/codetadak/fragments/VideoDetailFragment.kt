@@ -35,7 +35,7 @@ class VideoDetailFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 
 		youtubeViewModel.currentVideo.observe(viewLifecycleOwner) {
-			binding.sflShimmerContainer.visibility = if (it.isError) View.VISIBLE else View.GONE
+			binding.sflShimmerContainer.visibility = if (it.isLoading) View.VISIBLE else View.GONE
 
 			if (it.dataList.isNotEmpty()) {
 				with(binding) {

@@ -60,7 +60,7 @@ class MyVideoFragment : Fragment() {
 
 	private fun initViewModel() {
 		likeViewModel.likeVideos.observe(viewLifecycleOwner) {
-			myFavoriteVideoAdapter.setData(it.sortedBy {data -> data.snippet.title[0] })
+			myFavoriteVideoAdapter.setData(it)
 		}
 	}
 

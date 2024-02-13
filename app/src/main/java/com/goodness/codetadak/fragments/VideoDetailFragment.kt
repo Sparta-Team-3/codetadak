@@ -1,5 +1,6 @@
 package com.goodness.codetadak.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +13,14 @@ import com.bumptech.glide.Glide
 import com.goodness.codetadak.R
 import com.goodness.codetadak.databinding.FragmentVideoDetailBinding
 import com.goodness.codetadak.sharedpreferences.App
+import com.goodness.codetadak.viewmodels.LikeViewModel
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
 
 class VideoDetailFragment : Fragment() {
     private var _binding: FragmentVideoDetailBinding? = null
     private val binding get() = _binding!!
     private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
+    private val likeViewModel by lazy { ViewModelProvider(requireActivity())[LikeViewModel::class.java] }
     private var isFavorite = false
 
     override fun onCreateView(
@@ -45,14 +48,31 @@ class VideoDetailFragment : Fragment() {
                     tvDescription.text = it.dataList[0].snippet.description
                     isFavorite =
                         youtubeViewModel.currentVideo.value!!.dataList[0].snippet.isFavorite == true
+
+                    val isLike =
+                        likeViewModel.likeVideos.value?.any { videoItem -> videoItem.id == it.dataList[0].id }
+                            ?: false
+
+                    binding.tvLike.text = getString(if (isLike) R.string.disLike else R.string.like)
                 }
             }
+        }
+
+        likeViewModel.likeVideos.observe(viewLifecycleOwner) {
+            val currentVideo =
+                if (youtubeViewModel.currentVideo.value?.dataList?.isEmpty() == true) null
+                else youtubeViewModel.currentVideo.value?.dataList?.get(0)
+
+            val isLike = it.any { videoItem -> videoItem.id == currentVideo?.id }
+
+            binding.tvLike.text = getString(if (isLike) R.string.disLike else R.string.like)
         }
 
         with(binding) {
             btnDown.setOnClickListener {
                 requireActivity().supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.to_top, R.anim.from_bottom).remove(this@VideoDetailFragment).commit()
+                    .setCustomAnimations(R.anim.to_top, R.anim.from_bottom)
+                    .remove(this@VideoDetailFragment).commit()
                 requireActivity().supportFragmentManager.popBackStack()
             }
 
@@ -65,27 +85,32 @@ class VideoDetailFragment : Fragment() {
             )
 
             btnLike.setOnClickListener {
-                val video = youtubeViewModel.currentVideo.value?.dataList
-                isFavorite = !isFavorite
-                if (!isFavorite) {
-                    icLike.setImageResource(R.drawable.ic_like_empty)
-                    Toast.makeText(context, "좋아요 리스트에서 삭제되었습니다.", Toast.LENGTH_SHORT).show()
-                } else {
-                    icLike.setImageResource(R.drawable.ic_like_filled)
-                    Toast.makeText(context, "좋아요 리스트에 추가되었습니다.", Toast.LENGTH_SHORT).show()
-                    if (video != null) {
-                        App.prefs.saveMyFavorite(video)
-                    }
-                }
+                val video = youtubeViewModel.currentVideo.value?.dataList?.get(0)
+//				isFavorite = !isFavorite
+//				if (!isFavorite) {
+//					icLike.setImageResource(R.drawable.ic_like_empty)
+//					Toast.makeText(context, "좋아요 리스트에서 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+//				} else {
+//					icLike.setImageResource(R.drawable.ic_like_filled)
+//					Toast.makeText(context, "좋아요 리스트에 추가되었습니다.", Toast.LENGTH_SHORT).show()
+//					if (video != null) {
+//						App.prefs.saveMyFavorite(video)
+//					}
+//				}
+
+                likeViewModel.setLikeList(video!!)
             }
+
+
             root.setOnTouchListener { _, event -> true }
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 // 뒤로 가기 시 실행되는 코드
                 requireActivity().supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.to_top, R.anim.from_bottom).remove(this@VideoDetailFragment).commit()
+                    .setCustomAnimations(R.anim.to_top, R.anim.from_bottom)
+                    .remove(this@VideoDetailFragment).commit()
                 requireActivity().supportFragmentManager.popBackStack()
             }
         })
@@ -95,4 +120,11 @@ class VideoDetailFragment : Fragment() {
     override fun onResume() {
         super.onResume()
     }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

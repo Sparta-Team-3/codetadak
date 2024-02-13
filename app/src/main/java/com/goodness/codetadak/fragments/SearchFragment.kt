@@ -33,7 +33,6 @@ class SearchFragment : Fragment() {
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 	private var loadingDialog = CircleProgressDialog()
 
-
 	private val languageListAdapter by lazy {
 		LanguageListAdapter(requireActivity()) {
 			languageViewModel.updateCurLanguage(it)
@@ -64,6 +63,7 @@ class SearchFragment : Fragment() {
 			override fun onItemClick(position: Int) {
 				showLoading()
 				Log.d("asd","asd: $position")
+
 				(requireActivity() as MainActivity).replace()
 			}
 		})

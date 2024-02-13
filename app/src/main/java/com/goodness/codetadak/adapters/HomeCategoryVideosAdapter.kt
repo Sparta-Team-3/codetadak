@@ -35,7 +35,6 @@ class HomeCategoryVideosAdapter : RecyclerView.Adapter<HomeCategoryVideosAdapter
         val ivThumbnail = binding.ivItemHomeThumbnail
         val tvTitle = binding.tvItemHomeTitle
         val tvDescription = binding.tvItemHomeDescription
-
     }
 
     fun setData(items: List<VideoItem>) {

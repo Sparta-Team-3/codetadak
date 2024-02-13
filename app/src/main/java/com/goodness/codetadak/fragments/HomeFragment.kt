@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -22,15 +23,12 @@ import com.goodness.codetadak.viewmodels.YoutubeViewModel
 
 class HomeFragment : Fragment() {
 	private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
-	private lateinit var viewModel: HomeViewModel
+	private val viewModel by lazy { ViewModelProvider(this).get(HomeViewModel::class.java) }
+	private val homeMostViewedAdapter by lazy { HomeMostViewedAdapter(youtubeViewModel) }
+	private val homeCategoryVideosAdapter by lazy { HomeCategoryVideosAdapter() }
+	private val homeCategoryChannelsAdapter by lazy { HomeCategoryChannelsAdapter() }
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 	private val likeViewModel by lazy { ViewModelProvider(requireActivity())[LikeViewModel::class.java] }
-
-	private lateinit var homeMostViewedAdapter: HomeMostViewedAdapter
-	private lateinit var homeCategoryVideosAdapter: HomeCategoryVideosAdapter
-	private lateinit var homeCategoryChannelsAdapter: HomeCategoryChannelsAdapter
-
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 	}
@@ -41,11 +39,6 @@ class HomeFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-
-		viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-		homeMostViewedAdapter = HomeMostViewedAdapter(youtubeViewModel)
-		homeCategoryVideosAdapter = HomeCategoryVideosAdapter()
-		homeCategoryChannelsAdapter = HomeCategoryChannelsAdapter()
 
 		binding.rvMainMostViewedVideos.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 		binding.rvMainMostViewedVideos.adapter = homeMostViewedAdapter
@@ -71,7 +64,7 @@ class HomeFragment : Fragment() {
 
 		viewModel.getMostPopularVideos()
 
-		// 비디오 카테고리 조회
+		// 비디오 카테고리 조회 및 Spinner에 설정 (한국 지역, 한국어)
 		viewModel.getVideoCategories("KR", "ko")
 		viewModel.videoCategoriesResponse.observe(viewLifecycleOwner, Observer { response ->
 			val categories = response.items.map { it.snippet.title }
@@ -87,5 +80,31 @@ class HomeFragment : Fragment() {
 			}
 		})
 
+		binding.spinnerMainCategoryVideos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+				// 선택된 카테고리에 속하는 비디오 목록 조회
+				val selectedCategory = viewModel.videoCategoriesResponse.value?.items?.get(position)
+				selectedCategory?.let { category ->
+					viewModel.getVideosByCategory(category.id, "KR")
+					viewModel.getChannelsByCategory(category.id, "KR")
+				}
+
+			}
+
+			override fun onNothingSelected(parent: AdapterView<*>?) {
+				// 아무것도 선택되지 않았을 때의 처리
+				viewModel.getMostPopularVideos()
+			}
+		}
+
+		viewModel.videosBySelectedCategoryResponse.observe(viewLifecycleOwner, Observer{ response ->
+			// RecyclerView에 비디오 목록 설정
+			homeCategoryVideosAdapter.setData(response.items)
+		})
+
+		viewModel.channelResponse.observe(viewLifecycleOwner, Observer { response ->
+			// RecyclerView에 채널 정보 설정
+			homeCategoryChannelsAdapter.setData(response.items)
+		})
 	}
 }

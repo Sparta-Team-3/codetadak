@@ -95,7 +95,7 @@ class MyVideoFragment : Fragment() {
 	}
 
 	private fun itemSwipeDelete() {
-		val swipeHelperCallback = SwipeHelperCallback(myFavoriteVideoAdapter, requireActivity())
+		val swipeHelperCallback = SwipeHelperCallback(myFavoriteVideoAdapter, requireActivity(), requireContext())
 		ItemTouchHelper(swipeHelperCallback).attachToRecyclerView(binding.rvMyvideo)
 	}
 

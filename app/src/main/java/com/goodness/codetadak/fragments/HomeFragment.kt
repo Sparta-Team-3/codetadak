@@ -53,8 +53,6 @@ class HomeFragment : Fragment() {
 
 		homeMostViewedAdapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
 			override fun onItemClick(position: Int) {
-				Log.d("asd", "asd: $position")
-				showLoading()
 				(requireActivity() as MainActivity).replace()
 			}
 		})
@@ -107,7 +105,7 @@ class HomeFragment : Fragment() {
 			}
 		}
 
-		viewModel.videosBySelectedCategoryResponse.observe(viewLifecycleOwner, Observer{ response ->
+		viewModel.videosBySelectedCategoryResponse.observe(viewLifecycleOwner, Observer { response ->
 			// RecyclerView에 비디오 목록 설정
 			homeCategoryVideosAdapter.setData(response.items)
 		})
@@ -116,13 +114,5 @@ class HomeFragment : Fragment() {
 			// RecyclerView에 채널 정보 설정
 			homeCategoryChannelsAdapter.setData(response.items)
 		})
-	}
-
-	private fun showLoading() {
-		CoroutineScope(Dispatchers.Main).launch {
-			loadingDialog.show(parentFragmentManager, loadingDialog.tag)
-			withContext(Dispatchers.Default) { delay(1500) }
-			loadingDialog.dismiss()
-		}
 	}
 }

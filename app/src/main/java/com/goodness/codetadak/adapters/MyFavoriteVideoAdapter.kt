@@ -1,15 +1,22 @@
 package com.goodness.codetadak.adapters
 
+import android.content.Context
 import android.text.Html
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.goodness.codetadak.ItemTouchHelperListener
+import com.goodness.codetadak.R
 import com.goodness.codetadak.api.responses.VideoItem
 import com.goodness.codetadak.databinding.MyfavoritevideoListBinding
+import com.goodness.codetadak.viewmodels.LikeViewModel
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
+import com.google.android.material.snackbar.Snackbar
 
-class MyFavoriteVideoAdapter(private val youtubeViewModel: YoutubeViewModel) : RecyclerView.Adapter<MyFavoriteVideoAdapter.MyVideoHolder>() {
+class MyFavoriteVideoAdapter(private val youtubeViewModel: YoutubeViewModel, private val likeViewModel: LikeViewModel) : RecyclerView.Adapter<MyFavoriteVideoAdapter.MyVideoHolder>(), ItemTouchHelperListener {
     private var myVideoList = listOf<VideoItem>()
     interface MyVideoItemClick {
         fun onClick(position: Int)
@@ -30,7 +37,7 @@ class MyFavoriteVideoAdapter(private val youtubeViewModel: YoutubeViewModel) : R
 
     override fun getItemCount(): Int = myVideoList.size
 
-    inner class MyVideoHolder(private val binding : MyfavoritevideoListBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MyVideoHolder(private val binding : MyfavoritevideoListBinding) : ViewHolder(binding.root) {
         fun bind(item: VideoItem) {
             with(binding) {
                 Glide.with(root).load(item.snippet.thumbnails.high.url).into(ivMyfavoriteThumbnail)
@@ -46,15 +53,15 @@ class MyFavoriteVideoAdapter(private val youtubeViewModel: YoutubeViewModel) : R
         notifyDataSetChanged()
     }
 
-    fun removeData(position: Int) {
-        myVideoList.toMutableList().removeAt(position)
-        notifyItemRemoved(position)
-    }
-
     fun dataAt(position: Int) = myVideoList[position]
 
-    fun insertData(position: Int, item: VideoItem) {
-        myVideoList.toMutableList().add(position,item)
-        notifyItemInserted(position)
+    override fun onItemSwipe(position: Int, view: ViewHolder) {
+        // 정렬
+        val likeVideo = likeViewModel.likeVideos.value?.get(position)
+        likeViewModel.setLikeList(likeVideo!!)
+        Snackbar.make(view.itemView, R.string.snackbar_delete_info, 2500).setAction(R.string.snackbar_delete_cancel){
+            likeViewModel.setLikeList(likeVideo)
+        }.show()
+
     }
 }

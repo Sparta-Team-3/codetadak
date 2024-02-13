@@ -24,4 +24,6 @@
   <string name="video_title">영상 제목</string>
   <string name="video_dec">설명문구</string>
   <string name="disLike">Dislike</string>
+  <string name="snackbar_delete_info">해당 목록이 삭제되었습니다.</string>
+  <string name="snackbar_delete_cancel">삭제 취소</string>
 </resources>

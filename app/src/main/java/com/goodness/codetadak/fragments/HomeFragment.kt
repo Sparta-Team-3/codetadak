@@ -1,7 +1,6 @@
 package com.goodness.codetadak.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.goodness.codetadak.CircleProgressDialog
 import com.goodness.codetadak.MainActivity
+import com.goodness.codetadak.R
 import com.goodness.codetadak.adapters.HomeCategoryChannelsAdapter
 import com.goodness.codetadak.adapters.HomeCategoryVideosAdapter
 import com.goodness.codetadak.adapters.HomeMostViewedAdapter
@@ -21,17 +21,12 @@ import com.goodness.codetadak.databinding.FragmentHomeBinding
 import com.goodness.codetadak.viewmodels.HomeViewModel
 import com.goodness.codetadak.viewmodels.LikeViewModel
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 	private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
 	private val viewModel by lazy { ViewModelProvider(this).get(HomeViewModel::class.java) }
 	private val homeMostViewedAdapter by lazy { HomeMostViewedAdapter(youtubeViewModel) }
-	private val homeCategoryVideosAdapter by lazy { HomeCategoryVideosAdapter() }
+	private val homeCategoryVideosAdapter by lazy { HomeCategoryVideosAdapter(youtubeViewModel) }
 	private val homeCategoryChannelsAdapter by lazy { HomeCategoryChannelsAdapter() }
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 	private val likeViewModel by lazy { ViewModelProvider(requireActivity())[LikeViewModel::class.java] }
@@ -113,6 +108,37 @@ class HomeFragment : Fragment() {
 		viewModel.channelResponse.observe(viewLifecycleOwner, Observer { response ->
 			// RecyclerView에 채널 정보 설정
 			homeCategoryChannelsAdapter.setData(response.items)
+		})
+
+		// 영상의 thumbnail을 클릭햇을 때 VideoDetailFragment로 이동
+		homeMostViewedAdapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
+			override fun onItemClick(position: Int) {
+				val selectedVideo = homeMostViewedAdapter.getItem(position)
+				viewModel.selectedVideo.value = selectedVideo
+				val videoDetailFragment = VideoDetailFragment()
+
+				// FragmentManager를 사용하여 VideoDetailFragment로 이동
+				val fragmentManager = requireActivity().supportFragmentManager
+				val fragmentTransaction = fragmentManager.beginTransaction()
+				fragmentTransaction.setCustomAnimations(R.anim.to_top, R.anim.from_bottom)
+				fragmentTransaction.replace(R.id.video_detail_container, videoDetailFragment)
+				fragmentTransaction.commit()
+			}
+		})
+
+		homeCategoryVideosAdapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
+			override fun onItemClick(position: Int) {
+				val selectedVideo = homeCategoryVideosAdapter.getItem(position)
+				viewModel.selectedVideo.value = selectedVideo
+				val videoDetailFragment = VideoDetailFragment()
+
+				// FragmentManager를 사용하여 VideoDetailFragment로 이동
+				val fragmentManager = requireActivity().supportFragmentManager
+				val fragmentTransaction = fragmentManager.beginTransaction()
+				fragmentTransaction.setCustomAnimations(R.anim.to_top, R.anim.from_bottom)
+				fragmentTransaction.replace(R.id.video_detail_container, videoDetailFragment)
+				fragmentTransaction.commit()
+			}
 		})
 	}
 }

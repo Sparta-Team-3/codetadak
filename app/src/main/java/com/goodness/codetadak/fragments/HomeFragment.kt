@@ -2,6 +2,7 @@ package com.goodness.codetadak.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.goodness.codetadak.CircleProgressDialog
 import com.goodness.codetadak.MainActivity
 import com.goodness.codetadak.R
@@ -29,8 +31,6 @@ class HomeFragment : Fragment() {
 	private val homeCategoryVideosAdapter by lazy { HomeCategoryVideosAdapter(youtubeViewModel) }
 	private val homeCategoryChannelsAdapter by lazy { HomeCategoryChannelsAdapter() }
 	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
-	private val likeViewModel by lazy { ViewModelProvider(requireActivity())[LikeViewModel::class.java] }
-	private var loadingDialog = CircleProgressDialog()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -42,9 +42,22 @@ class HomeFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-
+		
 		binding.rvMainMostViewedVideos.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 		binding.rvMainMostViewedVideos.adapter = homeMostViewedAdapter
+		binding.rvMainMostViewedVideos.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+			override fun onInterceptTouchEvent(view: RecyclerView, event: MotionEvent): Boolean {
+				when (event.action) {
+					MotionEvent.ACTION_DOWN -> {
+						binding.rvMainMostViewedVideos.parent?.requestDisallowInterceptTouchEvent(true)
+					}
+				}
+				return false
+			}
+
+			override fun onTouchEvent(view: RecyclerView, event: MotionEvent) {}
+			override fun onRequestDisallowInterceptTouchEvent(view: Boolean) {}
+		})
 
 		homeMostViewedAdapter.setOnItemClickListener(object : SearchListListAdapter.OnItemClickListener {
 			override fun onItemClick(position: Int) {
@@ -54,9 +67,35 @@ class HomeFragment : Fragment() {
 
 		binding.rvMainCategoryVideos.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 		binding.rvMainCategoryVideos.adapter = homeCategoryVideosAdapter
+		binding.rvMainCategoryVideos.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+			override fun onInterceptTouchEvent(view: RecyclerView, event: MotionEvent): Boolean {
+				when (event.action) {
+					MotionEvent.ACTION_DOWN -> {
+						binding.rvMainCategoryVideos.parent?.requestDisallowInterceptTouchEvent(true)
+					}
+				}
+				return false
+			}
+
+			override fun onTouchEvent(view: RecyclerView, event: MotionEvent) {}
+			override fun onRequestDisallowInterceptTouchEvent(view: Boolean) {}
+		})
 
 		binding.rvMainCategoryChannels.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 		binding.rvMainCategoryChannels.adapter = homeCategoryChannelsAdapter
+		binding.rvMainCategoryChannels.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+			override fun onInterceptTouchEvent(view: RecyclerView, event: MotionEvent): Boolean {
+				when (event.action) {
+					MotionEvent.ACTION_DOWN -> {
+						binding.rvMainCategoryChannels.parent?.requestDisallowInterceptTouchEvent(true)
+					}
+				}
+				return false
+			}
+
+			override fun onTouchEvent(view: RecyclerView, event: MotionEvent) {}
+			override fun onRequestDisallowInterceptTouchEvent(view: Boolean) {}
+		})
 
 		// 가장 인기 있는 비디오 목록 조회
 		viewModel.videosResponse.observe(viewLifecycleOwner, Observer { response ->

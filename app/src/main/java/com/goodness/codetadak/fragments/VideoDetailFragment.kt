@@ -47,8 +47,22 @@ class VideoDetailFragment : Fragment() {
 					tvDescription.text = it.dataList[0].snippet.description
 					isFavorite =
 						youtubeViewModel.currentVideo.value!!.dataList[0].snippet.isFavorite == true
+
+					val isLike = likeViewModel.likeVideos.value?.any { videoItem -> videoItem.id == it.dataList[0].id } ?: false
+
+					binding.tvLike.text = getString(if (isLike) R.string.disLike else R.string.like)
 				}
 			}
+		}
+
+		likeViewModel.likeVideos.observe(viewLifecycleOwner) {
+			val currentVideo =
+				if (youtubeViewModel.currentVideo.value?.dataList?.isEmpty() == true) null
+				else youtubeViewModel.currentVideo.value?.dataList?.get(0)
+
+			val isLike = it.any { videoItem -> videoItem.id == currentVideo?.id }
+
+			binding.tvLike.text = getString(if (isLike) R.string.disLike else R.string.like)
 		}
 
 		with(binding) {

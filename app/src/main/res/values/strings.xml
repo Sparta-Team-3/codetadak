@@ -1,3 +1,37 @@
 <resources>
   <string name="app_name">CodeTadak</string>
+  <string name="fragment_1">Home</string>
+  <string name="fragment_2">Search</string>
+  <string name="fragment_3">My Video</string>
+
+  <!-- video detail -->
+  <string name="title">Title</string>
+  <string name="channel_title">Channel title</string>
+  <string name="like">Like</string>
+  <string name="share">Share</string>
+  <string name="description">Description</string>
+  <string name="search_et_hint">검색어를 입력해주세요</string>
+
+  <!-- error message -->
+  <string name="empty_name_error">이름을 입력해주세요</string>
+  <string name="empty_info_error">채널 소개글을 입력해주세요</string>
+  <string name="quota_exceeded">API 할당량 초과하였습니다.</string>
+
+  <!-- My video page -->
+  <string name="profile_name">이름을 설정해주세요</string>
+  <string name="channel_info">채널 설명을 작성해주세요!</string>
+  <string name="myvideo_list">나의 비디오 리스트 목록</string>
+  <string name="video_title">영상 제목</string>
+  <string name="video_dec">설명문구</string>
+  <string name="disLike">Dislike</string>
+  <string name="snackbar_delete_info">해당 목록이 삭제되었습니다.</string>
+  <string name="snackbar_delete_cancel">삭제 취소</string>
+    <string name="item_home_title">영상 제목입니다</string>
+  <string name="item_home_description">영상 설명입니다</string>
+  <string name="home_most_viewed">가장 인기 있는 영상</string>
+  <string name="home_category_videos">카테고리별 영상(스피너)</string>
+  <string name="home_category_channels">카테고리별 채널목록</string>
+  <string name="dialog_my_profile_save">저장</string>
+    <string name="dialog_my_profile_name">이름</string>
+  <string name="dialog_my_profile_channel_introduction">채널소개</string>
 </resources>

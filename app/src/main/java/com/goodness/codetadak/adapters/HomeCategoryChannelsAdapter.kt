@@ -34,7 +34,7 @@ class HomeCategoryChannelsAdapter() : RecyclerView.Adapter<HomeCategoryChannelsA
         return super.getItemId(position)
     }
 
-    inner class ViewHolder(private val binding: ItemHomeBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(binding: ItemHomeBinding) : RecyclerView.ViewHolder(binding.root) {
         val ivThumbnail = binding.ivItemHomeThumbnail
         val tvTitle = binding.tvItemHomeTitle
         val tvDescription = binding.tvItemHomeDescription

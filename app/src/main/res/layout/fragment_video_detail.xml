@@ -182,7 +182,7 @@
             android:paddingHorizontal="10dp"
             android:paddingBottom="20dp"
             android:textColor="@color/white"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:textStyle="bold"/>
   </ScrollView>
 

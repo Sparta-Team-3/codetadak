@@ -6,11 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.goodness.codetadak.api.YouTubeInstance
 import com.goodness.codetadak.api.responses.CategoriesResponse
-import com.goodness.codetadak.api.responses.CategoryItem
 import com.goodness.codetadak.api.responses.ChannelsResponse
 import com.goodness.codetadak.api.responses.VideoItem
 import com.goodness.codetadak.api.responses.VideosResponse
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class HomeViewModel : ViewModel() {
     val videosResponse: MutableLiveData<VideosResponse> = MutableLiveData()
@@ -28,9 +30,8 @@ class HomeViewModel : ViewModel() {
 
             if (response.isSuccessful) {
                 videosResponse.value = response.body()
-                Log.d("API Response1", "getVideoCategories Response: ${response.body()?.toString()}")
             } else {
-                // API 호출 실패한 경우에 대한 처리를 여기에 작성/**/
+                // API 호출 실패한 경우에 대한 처리를 여기에 작성
                 Log.e("API Error", "Failed to get most popular videos: ${response.errorBody()?.string()}")
             }
         }
@@ -43,15 +44,17 @@ class HomeViewModel : ViewModel() {
             val response = service.getVideoCategories("snippet", regionCode, hl)
 
             if (response.isSuccessful) {
-                val categoriesWithVideos = mutableListOf<CategoryItem>()
-                response.body()?.items?.forEach { category ->
-                    val videosResponse = service.getVideos("snippet,contentDetails,statistics", "mostPopular", 5, category.id, regionCode)
-                    if (videosResponse.isSuccessful && videosResponse.body()?.items?.isNotEmpty() == true) {
-                        categoriesWithVideos.add(category)
+                val categoriesWithVideos = response.body()?.items?.map { category ->
+                    async {
+                        val videosResponse = service.getVideos("snippet,contentDetails,statistics", "mostPopular", 5, category.id, regionCode)
+                        if (videosResponse.isSuccessful && videosResponse.body()?.items?.isNotEmpty() == true) {
+                            category
+                        } else {
+                            null
+                        }
                     }
-                }
-                videoCategoriesResponse.value = CategoriesResponse(response.body()?.kind ?: "", response.body()?.etag ?: "", categoriesWithVideos)
-                Log.d("API Response2", "getVideoCategories Response: ${response.body()?.toString()}")
+                }?.awaitAll()?.filterNotNull()
+                videoCategoriesResponse.value = CategoriesResponse(response.body()?.kind ?: "", response.body()?.etag ?: "", categoriesWithVideos ?: emptyList())
             } else {
                 Log.e("API Error", "Failed to get video categories: ${response.errorBody()?.string()}")
             }
@@ -66,12 +69,6 @@ class HomeViewModel : ViewModel() {
 
             if (response.isSuccessful) {
                 videosByCategoryResponse.value = response.body()
-                Log.d("API Response3", "getVideosByCategory Response: ${response.body()?.toString()}")
-
-                // items[0].id 필드의 값이 문자열인지 확인
-                response.body()?.items?.get(0)?.id?.let { id ->
-                    Log.d("API Check", "items[0].id is a ${id::class.java.simpleName}")
-                }
             } else {
                 Log.e("API Error", "Failed to get videos by category: ${response.errorBody()?.string()}")
             }
@@ -79,31 +76,26 @@ class HomeViewModel : ViewModel() {
     }
 
     // 특정 카테고리에 속하는 채널 정보 조회
-     fun getChannelInfo(channelId: String) {
-        viewModelScope.launch {
-            val service = YouTubeInstance.getService()
-            val response = service.getChannel("snippet", channelId)
-
-            if (response.isSuccessful) {
-                channelResponse.value = response.body()
-                Log.d("API Response4", "getChannelInfo Response: ${response.body()?.toString()}")
-            } else {
-                Log.e("API Error", "Failed to get channel info: ${response.errorBody()?.string()}")
-            }
-        }
+    private suspend fun getChannelInfo(channelId: String): Response<ChannelsResponse> {
+        val service = YouTubeInstance.getService()
+        return service.getChannel("snippet", channelId, "ko")
     }
 
-    // 특정 카테고리에 속하는 비디오의 각 채널들의 정보 조회
     fun getChannelsByCategory(categoryId: Int, regionCode: String) {
         viewModelScope.launch {
             val service = YouTubeInstance.getService()
             val response = service.getVideos("snippet,contentDetails,statistics", "mostPopular", 5, categoryId, regionCode)
 
             if (response.isSuccessful) {
-                response.body()?.items?.forEach { video ->
-                    getChannelInfo(video.snippet.channelId)
-                }
-                Log.d("API Response5", "getChannelsByCategory Response: ${response.body()?.toString()}")
+                val channelResponses = response.body()?.items?.map { video ->
+                    async { getChannelInfo(video.snippet.channelId) }
+                }?.awaitAll()
+
+                channelResponse.value = ChannelsResponse(
+                    kind = channelResponses?.firstOrNull()?.body()?.kind ?: "",
+                    etag = channelResponses?.firstOrNull()?.body()?.etag ?: "",
+                    items = channelResponses?.mapNotNull { it.body()?.items?.firstOrNull() } ?: emptyList()
+                )
             } else {
                 Log.e("API Error", "Failed to get videos by category: ${response.errorBody()?.string()}")
             }

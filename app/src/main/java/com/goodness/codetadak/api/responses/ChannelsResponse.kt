@@ -3,22 +3,14 @@ package com.goodness.codetadak.api.responses
 data class ChannelsResponse(
 	val kind: String,
 	val etag: String,
-	val nextPageToken: String,
-	val regionCode: String,
-	val pageInfo: ChannelPageInfo,
 	val items: List<ChannelItem>
 )
 
 data class ChannelItem(
 	val kind: String,
 	val etag: String,
-	val id: ChannelId,
+	val id: String,
 	val snippet: ChannelSnippet
-)
-
-data class ChannelId(
-	val kind: String,
-	val channelId: String
 )
 
 data class ChannelSnippet(
@@ -40,12 +32,6 @@ data class ChannelThumbnails(
 
 data class ChannelDefault(
 	val url: String,
-	val th: Long,
+	val width: Long,
 	val height: Long
 )
-
-data class ChannelPageInfo(
-	val totalResults: Long,
-	val resultsPerPage: Long
-)
-

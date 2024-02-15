@@ -12,7 +12,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
 
             <TextView
@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="가장 인기 있는 영상"
+                android:text="@string/home_most_viewed"
                 android:textColor="@color/pink"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="카테고리별 영상(스피너)"
+                android:text="@string/home_category_videos"
                 android:textColor="@color/pink"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="카테고리별 채널목록"
+                android:text="@string/home_category_channels"
                 android:textColor="@color/pink"
                 android:textSize="24sp"
                 android:textStyle="bold"

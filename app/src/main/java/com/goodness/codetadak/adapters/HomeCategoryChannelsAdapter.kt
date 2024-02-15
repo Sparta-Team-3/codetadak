@@ -7,9 +7,8 @@ import com.bumptech.glide.Glide
 import com.goodness.codetadak.api.responses.ChannelItem
 import com.goodness.codetadak.databinding.ItemHomeBinding
 
-class HomeCategoryChannelsAdapter : RecyclerView.Adapter<HomeCategoryChannelsAdapter.ViewHolder>() {
+class HomeCategoryChannelsAdapter() : RecyclerView.Adapter<HomeCategoryChannelsAdapter.ViewHolder>() {
 
-    private var listener: SearchListListAdapter.OnItemClickListener? = null
 
     private var channels: List<ChannelItem> = listOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeCategoryChannelsAdapter.ViewHolder {
@@ -17,21 +16,14 @@ class HomeCategoryChannelsAdapter : RecyclerView.Adapter<HomeCategoryChannelsAda
         return ViewHolder(binding)
     }
 
-    fun setOnItemClickListener(listener: SearchListListAdapter.OnItemClickListener) {
-        this.listener = listener
-    }
 
     override fun onBindViewHolder(holder: HomeCategoryChannelsAdapter.ViewHolder, position: Int) {
         val channel = channels[position]
-        Glide.with(holder.itemView.context)
+        Glide.with(holder.ivThumbnail.context)
             .load(channel.snippet.thumbnails.default.url)
             .into(holder.ivThumbnail)
         holder.tvTitle.text = channel.snippet.title
         holder.tvDescription.text = channel.snippet.description
-//        holder.root.setOnClickListener {
-//            this.listener?.onItemClick(position)
-//            youtubeViewModel.setCurrentVideoById(item.id)
-//        }
     }
 
     override fun getItemCount(): Int {
@@ -42,7 +34,7 @@ class HomeCategoryChannelsAdapter : RecyclerView.Adapter<HomeCategoryChannelsAda
         return super.getItemId(position)
     }
 
-    inner class ViewHolder(private val binding: ItemHomeBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(binding: ItemHomeBinding) : RecyclerView.ViewHolder(binding.root) {
         val ivThumbnail = binding.ivItemHomeThumbnail
         val tvTitle = binding.tvItemHomeTitle
         val tvDescription = binding.tvItemHomeDescription

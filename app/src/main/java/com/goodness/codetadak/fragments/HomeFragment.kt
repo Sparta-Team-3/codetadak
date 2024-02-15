@@ -11,9 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.goodness.codetadak.CircleProgressDialog
 import com.goodness.codetadak.MainActivity
-import com.goodness.codetadak.R
 import com.goodness.codetadak.adapters.HomeCategoryChannelsAdapter
 import com.goodness.codetadak.adapters.HomeCategoryVideosAdapter
 import com.goodness.codetadak.adapters.HomeMostViewedAdapter
@@ -21,16 +19,19 @@ import com.goodness.codetadak.adapters.SearchListListAdapter
 import com.goodness.codetadak.adapters.SpinnerAdapter
 import com.goodness.codetadak.databinding.FragmentHomeBinding
 import com.goodness.codetadak.viewmodels.HomeViewModel
-import com.goodness.codetadak.viewmodels.LikeViewModel
 import com.goodness.codetadak.viewmodels.YoutubeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 	private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
 	private val viewModel by lazy { ViewModelProvider(this).get(HomeViewModel::class.java) }
+	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 	private val homeMostViewedAdapter by lazy { HomeMostViewedAdapter(youtubeViewModel) }
 	private val homeCategoryVideosAdapter by lazy { HomeCategoryVideosAdapter(youtubeViewModel) }
 	private val homeCategoryChannelsAdapter by lazy { HomeCategoryChannelsAdapter() }
-	private val youtubeViewModel by lazy { ViewModelProvider(requireActivity())[YoutubeViewModel::class.java] }
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -111,13 +112,25 @@ class HomeFragment : Fragment() {
 			val categories = response.items.map { it.snippet.title }
 			val adapter = SpinnerAdapter(requireContext(), categories)
 			binding.spinnerMainCategoryVideos.adapter = adapter
-			// 카테고리 별 비디오 목록 조회
-			response.items.forEach { category ->
-				viewModel.getVideosByCategory(category.id, "KR")
-				viewModel.videosByCategoryResponse.observe(viewLifecycleOwner, Observer { videosResponse ->
-					// RecyclerView에 비디오 목록 설정
-					homeCategoryVideosAdapter.setData(videosResponse.items)
-				})
+			// 카테고리 별 비디오 목록 조회 (초기화면은 첫번째 카테고리에 속하는 비디오 목록 조회)
+			val firstCategory = response.items.firstOrNull()
+			firstCategory?.let { category ->
+				val scope = CoroutineScope(Dispatchers.IO)
+				scope.launch {
+					viewModel.getVideosByCategory(category.id, "KR")
+					viewModel.getChannelsByCategory(category.id, "KR")
+					withContext(Dispatchers.Main) {
+						viewModel.videosByCategoryResponse.observe(viewLifecycleOwner, Observer { videosResponse ->
+							// RecyclerView에 비디오 목록 설정
+							homeCategoryVideosAdapter.setData(videosResponse.items)
+						})
+
+						viewModel.channelResponse.observe(viewLifecycleOwner, Observer { channelsResponse ->
+							// RecyclerView에 채널 정보 설정
+							homeCategoryChannelsAdapter.setData(channelsResponse.items)
+						})
+					}
+				}
 			}
 		})
 
@@ -128,7 +141,7 @@ class HomeFragment : Fragment() {
 				val selectedCategory = viewModel.videoCategoriesResponse.value?.items?.get(position)
 				selectedCategory?.let { category ->
 					viewModel.getVideosByCategory(category.id, "KR")
-//					viewModel.getChannelsByCategory(category.id, "KR")
+					viewModel.getChannelsByCategory(category.id, "KR")
 				}
 
 			}
@@ -154,7 +167,6 @@ class HomeFragment : Fragment() {
 			override fun onItemClick(position: Int) {
 				val selectedVideo = homeMostViewedAdapter.getItem(position)
 				viewModel.selectedVideo.value = selectedVideo
-				val videoDetailFragment = VideoDetailFragment()
 
 				// FragmentManager를 사용하여 VideoDetailFragment로 이동
 				(activity as? MainActivity)?.replace()
@@ -165,7 +177,6 @@ class HomeFragment : Fragment() {
 			override fun onItemClick(position: Int) {
 				val selectedVideo = homeCategoryVideosAdapter.getItem(position)
 				viewModel.selectedVideo.value = selectedVideo
-				val videoDetailFragment = VideoDetailFragment()
 
 				// FragmentManager를 사용하여 VideoDetailFragment로 이동
 				(activity as? MainActivity)?.replace()

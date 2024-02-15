@@ -6,12 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ScrollView
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import com.goodness.codetadak.sharedpreferences.UserInfo
 import com.goodness.codetadak.databinding.DialogEditMyfrofileBinding
+import com.goodness.codetadak.sharedpreferences.UserInfo
 
 interface OkClick {
     fun onClick(userInfo: UserInfo)
@@ -53,8 +54,8 @@ class EditMyProfileDialog() : DialogFragment() {
             }
 
             setAddButtonEnable()
-            setTextChangeLisener()
-            setFocusChangedLisener()
+            setTextChangeListener()
+            setFocusChangedListener()
 
             btnEditCheck.setOnClickListener {
                 val userInfo = UserInfo(profileUri, etEditName.text.toString(),etEditInfo.text.toString())
@@ -65,7 +66,7 @@ class EditMyProfileDialog() : DialogFragment() {
 
     }
 
-    private fun setTextChangeLisener(){ // edit text에 입력되어 있다면 버튼 활성화
+    private fun setTextChangeListener(){ // edit text에 입력되어 있다면 버튼 활성화
         editTexts.forEach{editText ->
             editText.addTextChangedListener {
                 editText.addTextChangedListener()
@@ -74,9 +75,12 @@ class EditMyProfileDialog() : DialogFragment() {
         }
     }
 
-    private fun setFocusChangedLisener() { //
+    private fun setFocusChangedListener() { //
         editTexts.forEach { editText ->
             editText.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    (editText.parent.parent as? ScrollView)?.smoothScrollTo(0, editText.bottom)
+                }
                 if (hasFocus.not()) {
                     editText.setErrorMessage()
                     setAddButtonEnable()

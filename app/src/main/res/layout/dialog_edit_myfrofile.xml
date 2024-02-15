@@ -1,103 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@color/background"
-    android:paddingStart="50dp"
-    android:paddingTop="25dp"
-    android:paddingEnd="50dp"
-    android:paddingBottom="25dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_edit_profile"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="5dp"
-        android:clipToOutline="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_default_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/iv_add_profile"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="15dp"
-        android:src="@drawable/ic_dialog_imageadd"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_edit_profile"
-        app:layout_constraintStart_toEndOf="@+id/iv_edit_profile"
-        app:layout_constraintTop_toTopOf="@+id/iv_edit_profile"
-        app:layout_constraintVertical_bias="0.8" />
-
-    <TextView
-        android:id="@+id/tv_edit_name"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/dialog_my_profile_name"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_edit_profile" />
+        android:background="@color/background"
+        android:paddingStart="50dp"
+        android:paddingTop="25dp"
+        android:paddingEnd="50dp"
+        android:paddingBottom="25dp">
 
-    <EditText
-        android:id="@+id/et_edit_name"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/shape_edittext_radius10_white"
-        android:inputType="text|textMultiLine|textAutoCorrect"
-        android:paddingStart="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/tv_edit_name"
-        app:layout_constraintTop_toBottomOf="@+id/tv_edit_name" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_edit_profile"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="5dp"
+            android:clipToOutline="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_default_profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_edit_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/dialog_my_profile_channel_introduction"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_edit_name" />
+        <ImageView
+            android:id="@+id/iv_add_profile"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="15dp"
+            android:src="@drawable/ic_dialog_imageadd"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_edit_profile"
+            app:layout_constraintStart_toEndOf="@+id/iv_edit_profile"
+            app:layout_constraintTop_toTopOf="@+id/iv_edit_profile"
+            app:layout_constraintVertical_bias="0.8" />
 
-    <EditText
-        android:id="@+id/et_edit_info"
-        android:layout_width="220dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/shape_edittext_radius10_white"
-        android:inputType="text|textMultiLine|textAutoCorrect"
-        android:paddingStart="5dp"
-        android:singleLine="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/tv_edit_info"
-        app:layout_constraintTop_toBottomOf="@+id/tv_edit_info" />
+        <TextView
+            android:id="@+id/tv_edit_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/dialog_my_profile_name"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.05"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_edit_profile" />
 
-    <Button
-        android:id="@+id/btn_edit_check"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/pink"
-        android:text="@string/dialog_my_profile_save"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_edit_info" />
+        <EditText
+            android:id="@+id/et_edit_name"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_edittext_radius10_white"
+            android:inputType="text|textMultiLine|textAutoCorrect"
+            android:paddingStart="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_edit_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_edit_name" />
 
+        <TextView
+            android:id="@+id/tv_edit_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/dialog_my_profile_channel_introduction"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.05"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_edit_name" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <EditText
+            android:id="@+id/et_edit_info"
+            android:layout_width="220dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_edittext_radius10_white"
+            android:inputType="text|textMultiLine|textAutoCorrect"
+            android:paddingStart="5dp"
+            android:singleLine="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_edit_info"
+            app:layout_constraintTop_toBottomOf="@+id/tv_edit_info" />
+
+        <Button
+            android:id="@+id/btn_edit_check"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/pink"
+            android:text="@string/dialog_my_profile_save"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_edit_info" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
